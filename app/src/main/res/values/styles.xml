@@ -1,8 +1,11 @@
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="BaseAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/color_primary</item>
-        <item name="colorPrimaryDark">@color/color_primary_dark</item>
+    </style>
+
+    <style name="AppTheme" parent="BaseAppTheme">
+
     </style>
 
     <style name="ToolbarThemeOverlay" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">

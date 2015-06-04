@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="color_primary">@color/blue_grey_500</color>
-    <color name="color_primary_dark">@color/blue_grey_700</color>
 
     <!-- Material Design Color Palette -->
     <color name="red_50">#fde0dc</color>

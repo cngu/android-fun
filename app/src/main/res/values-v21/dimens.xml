@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Material design specifies an app bar elevation of 4dp, but apps like Calendar use 8dp.
+         http://www.google.com/design/spec/what-is-material/elevation-shadows.html -->
+    <dimen name="app_bar_elevation">8dp</dimen>
+</resources>
