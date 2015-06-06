@@ -8,6 +8,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="w820dp - this is a tablet in landscape" />
+        android:text="w820dp - You are viewing this on a tablet in landscape." />
 
 </RelativeLayout>
