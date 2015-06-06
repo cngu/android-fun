@@ -17,9 +17,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //
-        // Initialize helper *Managers
-        //
+        // Create helper *Managers
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         //

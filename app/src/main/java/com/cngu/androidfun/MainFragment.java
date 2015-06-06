@@ -2,7 +2,10 @@ package com.cngu.androidfun;
 
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -13,7 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-;
+;import com.cngu.androidfun.adapters.TopicListPagerAdapter;
 
 
 /**
@@ -21,16 +24,12 @@ import android.view.ViewGroup;
  */
 public class MainFragment extends BaseFragment implements IMainFragment {
 
-    /**
-     * Factory method to instantiate a new instance of this fragment.
-     *
-     * <p>This factory method is used instead of overloading {@link MainFragment#MainFragment()}
+    /*
+     * This factory method is used instead of overloading the default no-arg constructor
      * because when the system needs to recreate this fragment, it will call the default no-arg
      * constructor, and the arguments passed to the overloaded constructor will be lost.
      * This factory method will persist all arguments in a Bundle, and be restored when the system
      * invokes the default no-arg constructor for fragment recreation.
-     *
-     * @return New object instance of {@link MainFragment}.
      */
     public static IMainFragment newInstance() {
         return new MainFragment();
@@ -50,9 +49,22 @@ public class MainFragment extends BaseFragment implements IMainFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
+        // Create helper *Managers
+        FragmentManager fragmentManager = getChildFragmentManager();
+
         // Use the toolbar as our Action Bar (i.e. not in standalone mode)
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+
+        // Initialize and connect ViewPager and TabLayout
+        TopicListPagerAdapter topicListPagerAdapter = new TopicListPagerAdapter(fragmentManager);
+
+        ViewPager topicListPager = (ViewPager) view.findViewById(R.id.topic_list_pager);
+        topicListPager.setAdapter(topicListPagerAdapter);
+
+        TabLayout topicListPagerTabs = (TabLayout) view.findViewById(R.id.topic_list_pager_tabs);
+        topicListPagerTabs.setTabMode(TabLayout.MODE_SCROLLABLE);
+        topicListPagerTabs.setupWithViewPager(topicListPager);
 
         return view;
     }

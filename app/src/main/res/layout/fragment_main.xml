@@ -6,7 +6,20 @@
     android:orientation="vertical"
     tools:context="com.cngu.androidfun.MainFragment">
 
-    <include layout="@layout/toolbar" />
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <include layout="@layout/toolbar" />
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/topic_list_pager_tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </android.support.design.widget.AppBarLayout>
 
     <TextView
         android:layout_width="wrap_content"
