@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A MenuTopic represents a list of {@link com.cngu.androidfun.topic.Topic}.
+ * A MenuTopic represents a list of {@link Topic}.
  */
 public class MenuTopic extends Topic {
     private List<Topic> mSubtopics;

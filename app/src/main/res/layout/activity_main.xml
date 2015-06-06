@@ -9,10 +9,11 @@
     <include layout="@layout/toolbar" />
 
     <!-- This FrameLayout is a fragment container, but also doubles as a container to show a shadow
-         underneath the toolbar. Because toolbar already sets elevation (which is only active for
-         API level 21+), the foreground attribute 'toolbar_shadow' will point to a @null drawable
-         to avoid two shadows on API level 21+. -->
+         underneath the toolbar, in the foreground. Because toolbar already sets an elevation (which
+         is only active for API level 21+), the foreground attribute 'toolbar_shadow' will point to
+         a @null drawable to avoid two shadows on API level 21+. -->
     <FrameLayout
+        android:id="@+id/content_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:foreground="@drawable/toolbar_shadow" />

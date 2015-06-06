@@ -8,6 +8,6 @@
         android:layout_height="wrap_content"
         android:minHeight="?attr/actionBarSize"
         android:elevation="@dimen/app_bar_elevation"
-        app:theme="@style/ToolbarThemeOverlay"
+        android:theme="@style/ToolbarThemeOverlay"
         app:popupTheme="@style/ToolbarPopupThemeOverlay" />
 </merge>
