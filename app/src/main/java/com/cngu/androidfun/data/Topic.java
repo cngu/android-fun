@@ -1,4 +1,4 @@
-package com.cngu.androidfun.topic;
+package com.cngu.androidfun.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;

@@ -1,4 +1,4 @@
-package com.cngu.androidfun;
+package com.cngu.androidfun.main;
 
 
 import android.os.Bundle;
@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,13 +15,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-;import com.cngu.androidfun.adapters.TopicListPagerAdapter;
+;import com.cngu.androidfun.R;
+import com.cngu.androidfun.adapters.TopicListPagerAdapter;
+import com.cngu.androidfun.base.BaseFragment;
 
 
 /**
  * View {@link Fragment} that is intended to be attached to {@link MainActivity}.
  */
 public class MainFragment extends BaseFragment implements IMainFragment {
+
+    private IMainPresenter mPresenter;
 
     /*
      * This factory method is used instead of overloading the default no-arg constructor
@@ -90,5 +93,10 @@ public class MainFragment extends BaseFragment implements IMainFragment {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void registerPresenter(IMainPresenter presenter) {
+        mPresenter = presenter;
     }
 }

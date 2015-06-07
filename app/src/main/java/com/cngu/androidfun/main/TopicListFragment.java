@@ -1,12 +1,15 @@
-package com.cngu.androidfun;
+package com.cngu.androidfun.main;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.cngu.androidfun.R;
+import com.cngu.androidfun.base.BaseFragment;
+
 /**
- * A fragment used to display a list of {@link com.cngu.androidfun.topic.Topic}.
+ * A fragment used to display a list of {@link com.cngu.androidfun.data.Topic}.
  */
 public class TopicListFragment extends BaseFragment implements ITopicListFragment {
 

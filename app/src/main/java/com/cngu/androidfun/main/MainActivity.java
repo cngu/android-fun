@@ -1,9 +1,11 @@
-package com.cngu.androidfun;
+package com.cngu.androidfun.main;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+
+import com.cngu.androidfun.R;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -23,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
         //
         // Bootstrap Main MVP
         //
-        // TODO: Create Presenter and Model
 
         // Get reference to MainFragment if it already exists in FragmentManager; otherwise create it
         mView = (MainFragment) fragmentManager.findFragmentByTag(FRAGMENT_TAG_MAIN);
@@ -34,7 +35,8 @@ public class MainActivity extends AppCompatActivity {
             Log.i(TAG, "Found existing MainFragment; reusing it now.");
         }
 
-        // TODO: Init MainFragment
+        IMainPresenter presenter = new MainPresenter(mView);
+        mView.registerPresenter(presenter);
 
         // We only need to attach the fragment when this Activity is first opened.
         if (savedInstanceState == null) {
