@@ -1,10 +1,8 @@
-package com.cngu.androidfun.adapters;
+package com.cngu.androidfun.main;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-
-import com.cngu.androidfun.main.TopicListFragment;
 
 /**
  * A {@link android.support.v4.view.ViewPager} adapter to manage a list of {@link TopicListFragment}.

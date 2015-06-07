@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 ;import com.cngu.androidfun.R;
-import com.cngu.androidfun.adapters.TopicListPagerAdapter;
 import com.cngu.androidfun.base.BaseFragment;
 
 

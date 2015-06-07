@@ -29,6 +29,10 @@ public class TopicListFragment extends BaseFragment implements ITopicListFragmen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_topic_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_topic_list, container, false);
+
+        TopicListAdapter topicListAdapter = new TopicListAdapter();
+
+        return view;
     }
 }

@@ -1,5 +1,6 @@
 <resources>
 
+    <!-- Application and Activity Themes -->
     <style name="BaseAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorAccent">@color/color_accent</item>
@@ -9,12 +10,22 @@
 
     </style>
 
+    <!-- Toolbar Themes -->
     <style name="ToolbarThemeOverlay" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:background">?attr/colorPrimary</item>
     </style>
 
     <style name="ToolbarPopupThemeOverlay" parent="@style/ThemeOverlay.AppCompat.Light">
         <item name="android:background">@color/blue_grey_50</item>
+    </style>
+
+    <!-- View Styles -->
+    <style name="TopicTitle" parent="android:TextAppearance.DeviceDefault.Medium">
+
+    </style>
+
+    <style name="TopicDescription" parent="android:TextAppearance.DeviceDefault.Small">
+
     </style>
 
 </resources>
