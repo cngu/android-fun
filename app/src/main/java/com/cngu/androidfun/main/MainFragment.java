@@ -2,6 +2,7 @@ package com.cngu.androidfun.main;
 
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -24,7 +25,21 @@ import com.cngu.androidfun.base.BaseFragment;
  */
 public class MainFragment extends BaseFragment implements IMainFragment {
 
+    /*
+     * The delay of:
+     *     1) posting the 'tab selection' message to the main UI thread's message queue, and
+     *     2) waiting for the main UI thread's Looper to process this message
+     * just happens to be sufficient to avoid this bug on our test devices (Google Galaxy Nexus: 4.3,
+     * and Nexus 5: 5.1.1).
+     *
+     * Increase this delay if necessary.
+     */
+    private static final long SELECT_NEW_TAB_DELAY = 0L;
+
     private IMainPresenter mPresenter;
+    private TopicListPagerAdapter mTopicListPagerAdapter;
+    private TabLayout mTopicListPagerTabs;
+    private ViewPager mTopicListPager;
 
     /*
      * This factory method is used instead of overloading the default no-arg constructor
@@ -59,14 +74,14 @@ public class MainFragment extends BaseFragment implements IMainFragment {
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
 
         // Initialize and connect ViewPager and TabLayout
-        TopicListPagerAdapter topicListPagerAdapter = new TopicListPagerAdapter(fragmentManager);
+        mTopicListPagerAdapter = new TopicListPagerAdapter(fragmentManager);
 
-        ViewPager topicListPager = (ViewPager) view.findViewById(R.id.topic_list_pager);
-        topicListPager.setAdapter(topicListPagerAdapter);
+        mTopicListPager = (ViewPager) view.findViewById(R.id.topic_list_pager);
+        mTopicListPager.setAdapter(mTopicListPagerAdapter);
 
-        TabLayout topicListPagerTabs = (TabLayout) view.findViewById(R.id.topic_list_pager_tabs);
-        topicListPagerTabs.setTabMode(TabLayout.MODE_SCROLLABLE);
-        topicListPagerTabs.setupWithViewPager(topicListPager);
+        mTopicListPagerTabs = (TabLayout) view.findViewById(R.id.topic_list_pager_tabs);
+        mTopicListPagerTabs.setTabMode(TabLayout.MODE_SCROLLABLE);
+        mTopicListPagerTabs.setupWithViewPager(mTopicListPager);
 
         return view;
     }
@@ -88,6 +103,41 @@ public class MainFragment extends BaseFragment implements IMainFragment {
 
         switch (item.getItemId()) {
             case R.id.action_settings:
+                return true;
+            case R.id.add_page:
+                mTopicListPagerAdapter.addNewPage();
+
+                int newPageIndex = mTopicListPagerAdapter.getCount() - 1;
+                CharSequence newPageTitle = mTopicListPagerAdapter.getPageTitle(newPageIndex);
+                final TabLayout.Tab newTab = mTopicListPagerTabs.newTab().setText(newPageTitle);
+
+                /**
+                 * DESIGN SUPPORT LIBRARY 22.2.0 BUG: If a new tab is added and selected
+                 * immediately, the tab underline/indicator scrolls rapidly to the left and
+                 * off-screen. Subsequent tabs that are added will either exhibit the same behavior,
+                 * or select the tab prior to the new tab.
+                 *
+                 * WORKAROUND: Add a new tab, and manually select it after a delay. This is
+                 * equivalent to TabLayout.addTab(Tab, boolean), but with a delay introduced before
+                 * selecting the newly added tab.
+                 */
+                mTopicListPagerTabs.addTab(newTab);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        newTab.select();
+                    }
+                }, SELECT_NEW_TAB_DELAY);
+
+                return true;
+            case R.id.remove_page:
+                // Must refresh the ViewPager BEFORE removing the tab so that the tab
+                // underline/indicator can be seen animating back to the previous tab.
+                mTopicListPagerAdapter.removeLastPage();
+
+                int removedPageIndex = mTopicListPagerAdapter.getCount();
+                mTopicListPagerTabs.removeTabAt(removedPageIndex);
+
                 return true;
         }
 

@@ -4,5 +4,13 @@
         android:id="@+id/action_settings"
         android:title="@string/action_settings"
         android:orderInCategory="100"
-        app:showAsAction="" />
+        app:showAsAction="ifRoom|withText" />
+    <item
+        android:id="@+id/add_page"
+        android:title="Add Page"
+        app:showAsAction="ifRoom|withText" />
+    <item
+        android:id="@+id/remove_page"
+        android:title="Remove Page"
+        app:showAsAction="ifRoom|withText" />
 </menu>
