@@ -1,9 +1,11 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- Application and Activity Themes -->
     <style name="BaseAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorAccent">@color/color_accent</item>
+
+        <item name="topicViewStyle">@style/TopicViewStyle</item>
     </style>
 
     <style name="AppTheme" parent="BaseAppTheme">
@@ -17,6 +19,14 @@
 
     <style name="ToolbarPopupThemeOverlay" parent="@style/ThemeOverlay.AppCompat.Light">
         <item name="android:background">@color/blue_grey_50</item>
+    </style>
+
+    <!-- Default Styles for Compound Views -->
+    <style name="TopicViewStyle">
+        <item name="android:minHeight">@dimen/topic_view_height</item>
+        <item name="android:paddingLeft">@dimen/list_item_horizontal_padding</item>
+        <item name="android:paddingRight">@dimen/list_item_horizontal_padding</item>
+        <item name="android:orientation">horizontal</item>
     </style>
 
     <!-- View Styles -->

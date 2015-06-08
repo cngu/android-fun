@@ -31,8 +31,9 @@ public class TopicListFragment extends BaseFragment implements ITopicListFragmen
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_topic_list, container, false);
 
-        TopicListAdapter topicListAdapter = new TopicListAdapter();
+        TopicListAdapter topicListAdapter = new TopicListAdapter(null);
 
         return view;
+
     }
 }

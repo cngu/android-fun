@@ -16,7 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-;import com.cngu.androidfun.R;
+import com.cngu.androidfun.R;
 import com.cngu.androidfun.base.BaseFragment;
 
 
@@ -26,13 +26,13 @@ import com.cngu.androidfun.base.BaseFragment;
 public class MainFragment extends BaseFragment implements IMainFragment {
 
     /*
-     * The delay of:
+     * It just so happens that the delay of:
      *     1) posting the 'tab selection' message to the main UI thread's message queue, and
      *     2) waiting for the main UI thread's Looper to process this message
-     * just happens to be sufficient to avoid this bug on our test devices (Google Galaxy Nexus: 4.3,
-     * and Nexus 5: 5.1.1).
+     * is sufficient to avoid this bug on "modern" devices (Google Galaxy Nexus: 4.3,
+     * and Nexus 5: 5.1.1)!
      *
-     * Increase this delay if necessary.
+     * Increase this delay if necessary for older/slower devices.
      */
     private static final long SELECT_NEW_TAB_DELAY = 0L;
 
@@ -114,11 +114,11 @@ public class MainFragment extends BaseFragment implements IMainFragment {
                 /**
                  * DESIGN SUPPORT LIBRARY 22.2.0 BUG: If a new tab is added and selected
                  * immediately, the tab underline/indicator scrolls rapidly to the left and
-                 * off-screen. Subsequent tabs that are added will either exhibit the same behavior,
-                 * or select the tab prior to the new tab.
+                 * off-screen. Subsequent tabs that are added seems to either exhibit the same
+                 * behavior, or select the tab prior to the new tab.
                  *
                  * WORKAROUND: Add a new tab, and manually select it after a delay. This is
-                 * equivalent to TabLayout.addTab(Tab, boolean), but with a delay introduced before
+                 * equivalent to TabLayout.addTab(Tab, true), but with a delay introduced before
                  * selecting the newly added tab.
                  */
                 mTopicListPagerTabs.addTab(newTab);

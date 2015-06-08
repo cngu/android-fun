@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/topic_view_height"
-    android:paddingLeft="@dimen/list_item_horizontal_padding"
-    android:paddingRight="@dimen/list_item_horizontal_padding"
-    android:orientation="horizontal">
+<!-- IMPORTANT: This layout can only be used in a LinearLayout -->
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <RelativeLayout
         android:layout_width="0dp"
@@ -35,4 +31,4 @@
         android:layout_gravity="center_vertical"
         android:src="@drawable/menu_expander" />
 
-</LinearLayout>
+</merge>
