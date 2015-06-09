@@ -43,7 +43,11 @@ public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
     }
 
     public void addNewPage() {
-        mPageCount++;
+        addNewPages(1);
+    }
+
+    public void addNewPages(int numPages) {
+        mPageCount += numPages;
         notifyDataSetChanged();
     }
 

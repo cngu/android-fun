@@ -45,7 +45,9 @@ public class TopicView extends LinearLayout {
         LayoutInflater.from(getContext()).inflate(R.layout.view_topic, this, true);
 
         // Find and initialize children views
+        /*
         ((TextView)findViewById(R.id.title)).setText("CUSTOM TITLE");
         ((TextView) findViewById(R.id.description)).setText("CUSTOM DESCRIPTION");
+        */
     }
 }

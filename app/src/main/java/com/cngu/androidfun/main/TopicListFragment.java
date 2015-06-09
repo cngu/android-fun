@@ -1,12 +1,20 @@
 package com.cngu.androidfun.main;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.cngu.androidfun.R;
 import com.cngu.androidfun.base.BaseFragment;
+import com.cngu.androidfun.data.MenuTopic;
+import com.cngu.androidfun.data.Topic;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A fragment used to display a list of {@link com.cngu.androidfun.data.Topic}.
@@ -29,11 +37,22 @@ public class TopicListFragment extends BaseFragment implements ITopicListFragmen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_topic_list, container, false);
+        RecyclerView topicList = (RecyclerView) inflater.inflate(
+                R.layout.fragment_topic_list, container, false);
 
-        TopicListAdapter topicListAdapter = new TopicListAdapter(null);
+        Context context = topicList.getContext();
 
-        return view;
+        List<Topic> test = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            test.add(new MenuTopic("Menu Topic", "Menu Topic " + i, null));
+        }
+        LinearLayoutManager topicLayoutManager = new LinearLayoutManager(context);
+        TopicListAdapter topicListAdapter = new TopicListAdapter(test);
 
+
+        topicList.setLayoutManager(topicLayoutManager);
+        topicList.setAdapter(topicListAdapter);
+
+        return topicList;
     }
 }

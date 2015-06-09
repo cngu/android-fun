@@ -25,6 +25,8 @@ import com.cngu.androidfun.base.BaseFragment;
  */
 public class MainFragment extends BaseFragment implements IMainFragment {
 
+    private static final String KEY_NUM_OPEN_PAGES = "cngu.key.NUM_OPEN_PAGES";
+
     /*
      * It just so happens that the delay of:
      *     1) posting the 'tab selection' message to the main UI thread's message queue, and
@@ -73,17 +75,32 @@ public class MainFragment extends BaseFragment implements IMainFragment {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
 
+        // Load state
+        int numOpenPages;
+        if (savedInstanceState == null) {
+            numOpenPages = 0;
+        } else {
+            numOpenPages = savedInstanceState.getInt(KEY_NUM_OPEN_PAGES, 0);
+        }
+
         // Initialize and connect ViewPager and TabLayout
         mTopicListPagerAdapter = new TopicListPagerAdapter(fragmentManager);
 
         mTopicListPager = (ViewPager) view.findViewById(R.id.topic_list_pager);
         mTopicListPager.setAdapter(mTopicListPagerAdapter);
+        mTopicListPagerAdapter.addNewPages(numOpenPages);
 
         mTopicListPagerTabs = (TabLayout) view.findViewById(R.id.topic_list_pager_tabs);
         mTopicListPagerTabs.setTabMode(TabLayout.MODE_SCROLLABLE);
         mTopicListPagerTabs.setupWithViewPager(mTopicListPager);
 
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(KEY_NUM_OPEN_PAGES, mTopicListPagerAdapter.getCount());
     }
 
     @Override
