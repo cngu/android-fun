@@ -10,8 +10,10 @@ import android.view.ViewGroup;
 
 import com.cngu.androidfun.R;
 import com.cngu.androidfun.base.BaseFragment;
+import com.cngu.androidfun.data.ActionTopic;
 import com.cngu.androidfun.data.MenuTopic;
 import com.cngu.androidfun.data.Topic;
+import com.cngu.androidfun.enums.TopicFragmentId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,9 +45,13 @@ public class TopicListFragment extends BaseFragment implements ITopicListFragmen
         Context context = topicList.getContext();
 
         List<Topic> test = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 10; i++) {
             test.add(new MenuTopic("Menu Topic", "Menu Topic " + i, null));
         }
+        for (int i = 0; i < 10; i++) {
+            test.add(new ActionTopic("Action Topic", "Action Topic " + i, TopicFragmentId.TEST));
+        }
+
         LinearLayoutManager topicLayoutManager = new LinearLayoutManager(context);
         TopicListAdapter topicListAdapter = new TopicListAdapter(test);
 

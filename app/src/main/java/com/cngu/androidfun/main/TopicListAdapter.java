@@ -3,10 +3,13 @@ package com.cngu.androidfun.main;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cngu.androidfun.R;
+import com.cngu.androidfun.data.ActionTopic;
+import com.cngu.androidfun.data.MenuTopic;
 import com.cngu.androidfun.data.Topic;
 import com.cngu.androidfun.view.TopicView;
 
@@ -40,6 +43,30 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.View
         holder.titleTextView.setText(topic.getTitle());
         holder.descriptionTextView.setText(topic.getDescription());
 
+        // We use instanceof here only because this is a simple scenario, and we won't be adding
+        // more types of topics. If we do decide to add more topics in the future, we should perform
+        // one of the following refactorings:
+        //
+        // 1) Visitor Pattern
+        //    - "Element" will be Topic, and declare a accept(Visitor, TopicView) method.
+        //    - Create a Visitor class that encapsulates all of the logic to initialize a passed-in
+        //    TopicView with the data from a passed in Topic
+        //    - Topic.accept(Visitor, TopicView) would look like: visitor.visit(this, topicView)
+        //
+        // 2) Move this type-checking and TopicView initializing code into a separate helper class
+        //    - This simply localizes the type checking to one class, so any future changes only
+        //      need to be done on this class and nowhere else.
+        //
+        // 3) Topic.loadInto(TopicView)
+        //    - Force each topic subclass to know how to load its own data into a given TopicView.
+        //    - This isn't a great approach because Topics will now be cluttered with View logic.
+        //    - Doesn't follow SRP.
+        if (topic instanceof ActionTopic) {
+            holder.expandIconImageView.setVisibility(View.INVISIBLE);
+        } else if (topic instanceof MenuTopic) {
+            holder.expandIconImageView.setVisibility(View.VISIBLE);
+        }
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -56,11 +83,13 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.View
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView titleTextView;
         public TextView descriptionTextView;
+        public ImageView expandIconImageView;
 
         public ViewHolder(View itemView) {
             super(itemView);
             titleTextView = (TextView) itemView.findViewById(R.id.title);
             descriptionTextView = (TextView) itemView.findViewById(R.id.description);
+            expandIconImageView = (ImageView) itemView.findViewById(R.id.expand_icon);
         }
     }
 }

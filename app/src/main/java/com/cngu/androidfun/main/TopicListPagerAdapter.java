@@ -52,6 +52,10 @@ public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
     }
 
     public void removeLastPage() {
+        if (mPageCount == 0) {
+            return;
+        }
+
         mPageCount--;
         notifyDataSetChanged();
     }

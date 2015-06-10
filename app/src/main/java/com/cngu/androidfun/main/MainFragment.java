@@ -148,12 +148,15 @@ public class MainFragment extends BaseFragment implements IMainFragment {
 
                 return true;
             case R.id.remove_page:
-                // Must refresh the ViewPager BEFORE removing the tab so that the tab
-                // underline/indicator can be seen animating back to the previous tab.
-                mTopicListPagerAdapter.removeLastPage();
+                int removedPageIndex = mTopicListPagerAdapter.getCount() - 1;
 
-                int removedPageIndex = mTopicListPagerAdapter.getCount();
-                mTopicListPagerTabs.removeTabAt(removedPageIndex);
+                if (removedPageIndex >= 0) {
+                    // Must refresh the ViewPager BEFORE removing the tab so that the tab
+                    // underline/indicator can be seen animating back to the previous tab.
+                    mTopicListPagerAdapter.removeLastPage();
+
+                    mTopicListPagerTabs.removeTabAt(removedPageIndex);
+                }
 
                 return true;
         }
