@@ -41,7 +41,6 @@ public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
         for (int i = 0; i < 5; i++) {
             test.add(new ActionTopic("Action Topic", "Action Topic " + i, TopicFragmentId.TEST));
         }
-        Log.d("TETSETETST", "IS TOPIC LIST READY? " + (mTopicManager != null));
         item.setTopicList(test);
         item.setTopicClickListener(mTopicClickListener);
 
