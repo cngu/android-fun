@@ -61,7 +61,7 @@ public class TopicListFragment extends BaseFragment implements ITopicListFragmen
         mTopicListAdapter = new TopicListAdapter(test);
 
         // If this fragment was created for the first time (i.e. its state wasn't saved by the
-        // ViewPager), we already had a chance to register a presenter
+        // ViewPager), then we already had a chance to register a topic click listener.
         if (mTopicClickListener != null) {
             mTopicListAdapter.setTopicClickListener(mTopicClickListener);
         }
@@ -76,7 +76,8 @@ public class TopicListFragment extends BaseFragment implements ITopicListFragmen
     public void setTopicClickListener(TopicView.OnClickListener listener) {
         mTopicClickListener = listener;
 
-        // If this fragment is being recreated by the ViewPager
+        // If this fragment is being recreated by the ViewPager, then we're now registering a click
+        // listener after the RecyclerView adapter has already been created in onCreateView.
         if (mTopicListAdapter != null) {
             mTopicListAdapter.setTopicClickListener(mTopicClickListener);
         }

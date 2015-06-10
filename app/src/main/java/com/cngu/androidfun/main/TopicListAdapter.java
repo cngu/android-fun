@@ -85,8 +85,6 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.View
                 }
             });
         }
-
-
     }
 
     @Override

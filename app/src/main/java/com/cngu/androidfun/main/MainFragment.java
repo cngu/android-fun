@@ -88,7 +88,7 @@ public class MainFragment extends BaseFragment implements IMainFragment {
         mTopicListPager.setAdapter(mTopicListPagerAdapter);
 
         // If this fragment was created for the first time (i.e. its state wasn't saved by the
-        // FragmentManager), we already had a chance to register a presenter
+        // FragmentManager), we already had a chance to register a presenter.
         if (mPresenter != null) {
             mTopicListPagerAdapter.setTopicClickListener(mPresenter);
             mTopicListPagerAdapter.addNewPages(numOpenPages);
@@ -172,7 +172,8 @@ public class MainFragment extends BaseFragment implements IMainFragment {
     public void registerPresenter(IMainPresenter presenter) {
         mPresenter = presenter;
 
-        // If this fragment is being recreated by the FragmentManager
+        // If this fragment is being recreated by the FragmentManager, then we're now registering a
+        // presenter after the ViewPager has already been created in onCreateView.
         if (mTopicListPagerAdapter != null) {
             mTopicListPagerAdapter.setTopicClickListener(mPresenter);
 
