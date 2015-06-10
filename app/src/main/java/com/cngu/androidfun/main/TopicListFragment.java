@@ -4,20 +4,15 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.cngu.androidfun.R;
 import com.cngu.androidfun.base.BaseFragment;
-import com.cngu.androidfun.data.ActionTopic;
-import com.cngu.androidfun.data.MenuTopic;
 import com.cngu.androidfun.data.Topic;
-import com.cngu.androidfun.enums.TopicFragmentId;
 import com.cngu.androidfun.view.TopicView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

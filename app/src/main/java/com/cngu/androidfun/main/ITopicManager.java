@@ -9,13 +9,14 @@ import java.util.List;
 
 public interface ITopicManager {
     /**
-     * Returns an immutable list of {@link Topic}s that are on the specified page number.
+     * Returns a previously selected {@link MenuTopic} in the 'selected topic' history.
      *
-     * @param pageNumber The page number that needs a list of {@link Topic}s.
-     * @return Immutable list of topics that are on page 'pageNumber', or null if pageNumber is out
-     *         of bounds.
+     * @param historyIndex The index of the selected {@link MenuTopic} in history, where 0 is the
+     *                     oldest {@link MenuTopic}.
+     * @return The selected {@link MenuTopic} in history, or null if 'historyIndex' is beyond the
+     *         bounds of the history stack.
      */
-    List<Topic> getTopics(int pageNumber);
+    MenuTopic getTopicInHistory(int historyIndex);
 
     void addTopicToHistory(MenuTopic topic);
 

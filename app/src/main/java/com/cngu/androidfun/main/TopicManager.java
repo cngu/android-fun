@@ -53,13 +53,12 @@ public class TopicManager implements ITopicManager {
     }
 
     @Override
-    public List<Topic> getTopics(int pageNumber) {
+    public MenuTopic getTopicInHistory(int pageNumber) {
         if (pageNumber < 0 || pageNumber >= mHistory.size()) {
             return null;
         }
 
-        MenuTopic mt = mHistory.get(pageNumber);
-        return Arrays.asList(mt.getSubtopics());
+        return mHistory.get(pageNumber);
     }
 
     @Override

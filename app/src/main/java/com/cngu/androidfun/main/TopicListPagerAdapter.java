@@ -5,13 +5,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.ViewGroup;
 
-import com.cngu.androidfun.data.ActionTopic;
 import com.cngu.androidfun.data.MenuTopic;
 import com.cngu.androidfun.data.Topic;
-import com.cngu.androidfun.enums.TopicFragmentId;
 import com.cngu.androidfun.view.TopicView;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -32,7 +30,10 @@ public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         ITopicListFragment item = (TopicListFragment) super.instantiateItem(container, position);
 
-        item.setTopicList(mTopicManager.getTopics(position));
+        MenuTopic topicInHistory = mTopicManager.getTopicInHistory(position);
+        List<Topic> selectableTopics = Arrays.asList(topicInHistory.getSubtopics());
+        item.setTopicList(selectableTopics);
+
         item.setTopicClickListener(mTopicClickListener);
 
         return item;
