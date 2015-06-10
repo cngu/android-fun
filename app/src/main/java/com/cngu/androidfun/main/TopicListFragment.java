@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import com.cngu.androidfun.data.ActionTopic;
 import com.cngu.androidfun.data.MenuTopic;
 import com.cngu.androidfun.data.Topic;
 import com.cngu.androidfun.enums.TopicFragmentId;
+import com.cngu.androidfun.view.TopicView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +24,8 @@ import java.util.List;
  * A fragment used to display a list of {@link com.cngu.androidfun.data.Topic}.
  */
 public class TopicListFragment extends BaseFragment implements ITopicListFragment {
+
+    private TopicView.OnClickListener mTopicClickListener;
 
     /*
      * This factory method is used instead of overloading the default no-arg constructor
@@ -53,12 +57,16 @@ public class TopicListFragment extends BaseFragment implements ITopicListFragmen
         }
 
         LinearLayoutManager topicLayoutManager = new LinearLayoutManager(context);
-        TopicListAdapter topicListAdapter = new TopicListAdapter(test);
-
+        TopicListAdapter topicListAdapter = new TopicListAdapter(test, mTopicClickListener);
 
         topicList.setLayoutManager(topicLayoutManager);
         topicList.setAdapter(topicListAdapter);
 
         return topicList;
+    }
+
+    @Override
+    public void setTopicClickListener(TopicView.OnClickListener listener) {
+        mTopicClickListener = listener;
     }
 }

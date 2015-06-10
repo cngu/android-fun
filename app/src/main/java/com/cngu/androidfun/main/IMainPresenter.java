@@ -1,4 +1,6 @@
 package com.cngu.androidfun.main;
 
-public interface IMainPresenter {
+import com.cngu.androidfun.view.TopicView;
+
+public interface IMainPresenter extends TopicView.OnClickListener{
 }

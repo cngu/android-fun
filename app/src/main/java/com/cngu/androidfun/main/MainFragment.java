@@ -68,12 +68,12 @@ public class MainFragment extends BaseFragment implements IMainFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
-        // Create helper *Managers
-        FragmentManager fragmentManager = getChildFragmentManager();
-
         // Use the toolbar as our Action Bar (i.e. not in standalone mode)
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+
+        // Initialize helper *Managers
+        FragmentManager fragmentManager = getChildFragmentManager();
 
         // Load state
         int numOpenPages;
@@ -83,12 +83,20 @@ public class MainFragment extends BaseFragment implements IMainFragment {
             numOpenPages = savedInstanceState.getInt(KEY_NUM_OPEN_PAGES, 0);
         }
 
-        // Initialize and connect ViewPager and TabLayout
-        mTopicListPagerAdapter = new TopicListPagerAdapter(fragmentManager);
-
+        // Find ViewPager and TabLayout in the layout resource, but we don't connect them
+        // until a presenter is registered. This is done to handle the case where Android destroys
+        // and recreates this Fragment before we have a chance to re-find the reference to it and
+        // register a presenter.
         mTopicListPager = (ViewPager) view.findViewById(R.id.topic_list_pager);
+        mTopicListPagerAdapter = new TopicListPagerAdapter(fragmentManager);
         mTopicListPager.setAdapter(mTopicListPagerAdapter);
-        mTopicListPagerAdapter.addNewPages(numOpenPages);
+
+        // If this fragment was created for the first time (i.e. its state wasn't saved by the
+        // FragmentManager)
+        if (mPresenter != null) {
+            mTopicListPagerAdapter.setTopicClickListener(mPresenter);
+            mTopicListPagerAdapter.addNewPages(numOpenPages);
+        }
 
         mTopicListPagerTabs = (TabLayout) view.findViewById(R.id.topic_list_pager_tabs);
         mTopicListPagerTabs.setTabMode(TabLayout.MODE_SCROLLABLE);
@@ -128,7 +136,7 @@ public class MainFragment extends BaseFragment implements IMainFragment {
                 CharSequence newPageTitle = mTopicListPagerAdapter.getPageTitle(newPageIndex);
                 final TabLayout.Tab newTab = mTopicListPagerTabs.newTab().setText(newPageTitle);
 
-                /**
+                /*
                  * DESIGN SUPPORT LIBRARY 22.2.0 BUG: If a new tab is added and selected
                  * immediately, the tab underline/indicator scrolls rapidly to the left and
                  * off-screen. Subsequent tabs that are added seems to either exhibit the same
@@ -167,5 +175,16 @@ public class MainFragment extends BaseFragment implements IMainFragment {
     @Override
     public void registerPresenter(IMainPresenter presenter) {
         mPresenter = presenter;
+
+        // If this fragment is being recreated by the ViewPager
+        if (mTopicListPagerAdapter != null) {
+            mTopicListPagerAdapter.setTopicClickListener(mPresenter);
+            mTopicListPagerAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public int getCurrentPage() {
+        return mTopicListPager.getCurrentItem();
     }
 }

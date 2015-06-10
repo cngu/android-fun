@@ -5,11 +5,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.ViewGroup;
 
+import com.cngu.androidfun.view.TopicView;
+
 /**
  * A {@link android.support.v4.view.ViewPager} adapter to manage a list of {@link TopicListFragment}.
  */
 public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
 
+    private TopicView.OnClickListener mTopicClickListener;
     private int mPageCount;
 
     public TopicListPagerAdapter(FragmentManager fm) {
@@ -19,7 +22,11 @@ public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        return super.instantiateItem(container, position);
+        ITopicListFragment item = (TopicListFragment) super.instantiateItem(container, position);
+
+        item.setTopicClickListener(mTopicClickListener);
+
+        return item;
     }
 
     @Override
@@ -51,6 +58,9 @@ public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
         notifyDataSetChanged();
     }
 
+    /**
+     * Removes the last page and immediately notifies the ViewPager.
+     */
     public void removeLastPage() {
         if (mPageCount == 0) {
             return;
@@ -58,5 +68,9 @@ public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
 
         mPageCount--;
         notifyDataSetChanged();
+    }
+
+    public void setTopicClickListener(TopicView.OnClickListener listener) {
+        mTopicClickListener = listener;
     }
 }

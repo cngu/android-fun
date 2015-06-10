@@ -18,9 +18,11 @@ import java.util.List;
 public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.ViewHolder> {
 
     private List<Topic> mTopicList;
+    private TopicView.OnClickListener mTopicClickListener;
 
-    public TopicListAdapter(List<Topic> topics) {
+    public TopicListAdapter(List<Topic> topics, TopicView.OnClickListener topicClickListener) {
         mTopicList = topics;
+        mTopicClickListener = topicClickListener;
     }
 
     @Override
@@ -38,7 +40,8 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.View
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int viewType) {
-        Topic topic = mTopicList.get(holder.getAdapterPosition());
+        final int topicPosition = holder.getAdapterPosition();
+        final Topic topic = mTopicList.get(topicPosition);
 
         holder.titleTextView.setText(topic.getTitle());
         holder.descriptionTextView.setText(topic.getDescription());
@@ -63,16 +66,25 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.View
         //    - Doesn't follow SRP.
         if (topic instanceof ActionTopic) {
             holder.expandIconImageView.setVisibility(View.INVISIBLE);
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mTopicClickListener.onActionTopicClicked((ActionTopic)topic, topicPosition);
+                }
+            });
         } else if (topic instanceof MenuTopic) {
             holder.expandIconImageView.setVisibility(View.VISIBLE);
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mTopicClickListener.onMenuTopicClicked((MenuTopic)topic, topicPosition);
+                }
+            });
         }
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-            }
-        });
     }
 
     @Override

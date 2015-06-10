@@ -7,6 +7,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cngu.androidfun.R;
+import com.cngu.androidfun.data.ActionTopic;
+import com.cngu.androidfun.data.MenuTopic;
 
 /**
  * A View representation of {@link com.cngu.androidfun.data.Topic}.
@@ -49,5 +51,10 @@ public class TopicView extends LinearLayout {
         ((TextView)findViewById(R.id.title)).setText("CUSTOM TITLE");
         ((TextView) findViewById(R.id.description)).setText("CUSTOM DESCRIPTION");
         */
+    }
+
+    public interface OnClickListener {
+        void onActionTopicClicked(ActionTopic topic, int position);
+        void onMenuTopicClicked(MenuTopic topic, int position);
     }
 }
