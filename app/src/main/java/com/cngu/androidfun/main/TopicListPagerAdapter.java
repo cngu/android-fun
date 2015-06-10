@@ -35,10 +35,10 @@ public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
 
         // TODO: Load list of topics and set it into setTopicManager
         List<Topic> test = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 10; i++) {
             test.add(new MenuTopic("Menu Topic", "Menu Topic " + i, null));
         }
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 10; i++) {
             test.add(new ActionTopic("Action Topic", "Action Topic " + i, TopicFragmentId.TEST));
         }
         item.setTopicList(test);

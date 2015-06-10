@@ -133,7 +133,7 @@ public class MainFragment extends BaseFragment implements IMainFragment {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        switch (item.getItemId()) {
+        switch (id) {
             case R.id.action_settings:
                 return true;
             case R.id.add_page:

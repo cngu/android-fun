@@ -8,4 +8,6 @@ import com.cngu.androidfun.data.Topic;
  * required and can easily be created on demand.
  */
 public class TopicManager implements ITopicManager {
+
+
 }
