@@ -1,6 +1,7 @@
 package com.cngu.androidfun.main;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
@@ -9,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -39,6 +41,8 @@ public class MainFragment extends BaseFragment implements IMainFragment {
     private static final long SELECT_NEW_TAB_DELAY = 0L;
 
     private IMainPresenter mPresenter;
+    private ITopicManager mTopicManager;
+
     private TopicListPagerAdapter mTopicListPagerAdapter;
     private TabLayout mTopicListPagerTabs;
     private ViewPager mTopicListPager;
@@ -85,14 +89,21 @@ public class MainFragment extends BaseFragment implements IMainFragment {
 
         mTopicListPager = (ViewPager) view.findViewById(R.id.topic_list_pager);
         mTopicListPagerAdapter = new TopicListPagerAdapter(fragmentManager);
-        mTopicListPager.setAdapter(mTopicListPagerAdapter);
 
-        // If this fragment was created for the first time (i.e. its state wasn't saved by the
-        // FragmentManager), we already had a chance to register a presenter.
-        if (mPresenter != null) {
-            mTopicListPagerAdapter.setTopicClickListener(mPresenter);
-            mTopicListPagerAdapter.addNewPages(numOpenPages);
-        }
+        // I'm not entirely sure why, but it's guaranteed that the TopicManager and Presenter are
+        // set by MainActivity.onCreate() BEFORE this onCreateView is called. This is always the case
+        // regardless if a rotation occurs and this fragment is recreated for us. This fragment is
+        // being onAttach'd and onCreate'd BEFORE MainActivity.onCreate() even starts, but
+        // onCreateView is always called AFTER MainActivity.onCreate() finishes. This means we always
+        // have a chance to register the TopicManager and Presenter here, even if the system
+        // recreates and attaches this fragment for us after rotation.
+        // - This described behavior seems to only occur for fragments managed by FragmentManager.
+        //   For fragments in ViewPager, see TopicListFragment to see how they should be handled.
+        mTopicListPagerAdapter.setTopicManager(mTopicManager);
+        mTopicListPagerAdapter.setTopicClickListener(mPresenter);
+        mTopicListPagerAdapter.addNewPages(numOpenPages);
+
+        mTopicListPager.setAdapter(mTopicListPagerAdapter);
 
         mTopicListPagerTabs = (TabLayout) view.findViewById(R.id.topic_list_pager_tabs);
         mTopicListPagerTabs.setTabMode(TabLayout.MODE_SCROLLABLE);
@@ -157,7 +168,7 @@ public class MainFragment extends BaseFragment implements IMainFragment {
                 if (removedPageIndex >= 0) {
                     // Must refresh the ViewPager BEFORE removing the tab so that the tab
                     // underline/indicator can be seen animating back to the previous tab.
-                    mTopicListPagerAdapter.removeLastPage();
+                    mTopicListPagerAdapter.goBackOnePage();
 
                     mTopicListPagerTabs.removeTabAt(removedPageIndex);
                 }
@@ -171,14 +182,11 @@ public class MainFragment extends BaseFragment implements IMainFragment {
     @Override
     public void registerPresenter(IMainPresenter presenter) {
         mPresenter = presenter;
+    }
 
-        // If this fragment is being recreated by the FragmentManager, then we're now registering a
-        // presenter after the ViewPager has already been created in onCreateView.
-        if (mTopicListPagerAdapter != null) {
-            mTopicListPagerAdapter.setTopicClickListener(mPresenter);
-
-            mTopicListPagerAdapter.notifyDataSetChanged();
-        }
+    @Override
+    public void setTopicManager(ITopicManager topicManager) {
+        mTopicManager = topicManager;
     }
 
     @Override

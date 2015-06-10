@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Create helper *Managers
         FragmentManager fragmentManager = getSupportFragmentManager();
+        ITopicManager topicManager = new TopicManager();
 
         //
         // Bootstrap Main MVP
@@ -35,11 +36,12 @@ public class MainActivity extends AppCompatActivity {
             Log.i(TAG, "Found existing MainFragment; reusing it now.");
         }
 
-        IMainPresenter presenter = new MainPresenter(mView);
+        IMainPresenter presenter = new MainPresenter(mView, topicManager);
         mView.registerPresenter(presenter);
 
         // We only need to attach the fragment when this Activity is first opened.
         if (savedInstanceState == null) {
+            Log.i(TAG, "Attaching MainFragment to container.");
             fragmentManager.beginTransaction()
                     .add(R.id.content_fragment_container, mView.asFragment(), FRAGMENT_TAG_MAIN)
                     .commit();

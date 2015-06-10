@@ -5,5 +5,7 @@ import com.cngu.androidfun.base.IBaseFragment;
 public interface IMainFragment extends IBaseFragment {
     void registerPresenter(IMainPresenter presenter);
 
+    void setTopicManager(ITopicManager topicManager);
+
     int getCurrentPage();
 }

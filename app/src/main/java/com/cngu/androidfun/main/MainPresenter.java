@@ -12,9 +12,13 @@ public class MainPresenter implements IMainPresenter {
     private static final String TAG = MainPresenter.class.getSimpleName();
 
     private IMainFragment mView;
+    private ITopicManager mTopicManager;
 
-    public MainPresenter(IMainFragment view) {
+    public MainPresenter(IMainFragment view, ITopicManager topicManager) {
         mView = view;
+        mTopicManager = topicManager;
+
+        mView.setTopicManager(mTopicManager);
     }
 
     @Override

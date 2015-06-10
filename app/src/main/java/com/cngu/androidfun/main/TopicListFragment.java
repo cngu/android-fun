@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +25,9 @@ import java.util.List;
  */
 public class TopicListFragment extends BaseFragment implements ITopicListFragment {
 
-    private TopicView.OnClickListener mTopicClickListener;
     private TopicListAdapter mTopicListAdapter;
+    private TopicView.OnClickListener mTopicClickListener;
+    private List<Topic> mTopicList;
 
     /*
      * This factory method is used instead of overloading the default no-arg constructor
@@ -48,21 +50,22 @@ public class TopicListFragment extends BaseFragment implements ITopicListFragmen
 
         Context context = topicList.getContext();
 
-        List<Topic> test = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            test.add(new MenuTopic("Menu Topic", "Menu Topic " + i, null));
-        }
-        for (int i = 0; i < 10; i++) {
-            test.add(new ActionTopic("Action Topic", "Action Topic " + i, TopicFragmentId.TEST));
-        }
-
         LinearLayoutManager topicLayoutManager = new LinearLayoutManager(context);
-        mTopicListAdapter = new TopicListAdapter(test);
+        mTopicListAdapter = new TopicListAdapter(null);
+
+        Log.d("TAG", "TopicListFragment.onCreateView");
 
         // If this fragment was created for the first time (i.e. its state wasn't saved by the
-        // ViewPager), then we already had a chance to register a topic click listener.
-        if (mTopicClickListener != null) {
+        // ViewPager), then we already had a chance to register both a topic click listener and a
+        // list of topics for the RecyclerView.
+        // - This check is needed because unlike MainFragment, it may be the case that this fragment
+        // is recreated after a rotation and onCreateView is called BEFORE we have had a chance to
+        // register the topic click listener and topic list.
+        // - The reason may be because this Fragment is within (and being managed by) a ViewPager.
+        if (mTopicClickListener != null && mTopicList != null) {
+            Log.d("TAG", "TopicListFragment.onCreateView - listener and topic list are not null");
             mTopicListAdapter.setTopicClickListener(mTopicClickListener);
+            mTopicListAdapter.setTopicList(mTopicList);
         }
 
         topicList.setLayoutManager(topicLayoutManager);
@@ -72,12 +75,29 @@ public class TopicListFragment extends BaseFragment implements ITopicListFragmen
     }
 
     @Override
-    public void setTopicClickListener(TopicView.OnClickListener listener) {
-        mTopicClickListener = listener;
+    public void setTopicList(List<Topic> topicList) {
+        mTopicList = topicList;
+
+        Log.d("TAG", "TopicListFragment.setTopicList");
 
         // If this fragment is being recreated by the ViewPager, then we're now registering a click
         // listener after the RecyclerView adapter has already been created in onCreateView.
         if (mTopicListAdapter != null) {
+            Log.d("TAG", "TopicListFragment.setTopicList - Adapter not null");
+            mTopicListAdapter.setTopicList(mTopicList);
+        }
+    }
+
+    @Override
+    public void setTopicClickListener(TopicView.OnClickListener listener) {
+        mTopicClickListener = listener;
+
+        Log.d("TAG", "TopicListFragment.setTopicClickListener");
+
+        // If this fragment is being recreated by the ViewPager, then we're now registering a click
+        // listener after the RecyclerView adapter has already been created in onCreateView.
+        if (mTopicListAdapter != null) {
+            Log.d("TAG", "TopicListFragment.setTopicClickListener - Adapter not null");
             mTopicListAdapter.setTopicClickListener(mTopicClickListener);
         }
     }
