@@ -26,6 +26,7 @@ import java.util.List;
 public class TopicListFragment extends BaseFragment implements ITopicListFragment {
 
     private TopicView.OnClickListener mTopicClickListener;
+    private TopicListAdapter mTopicListAdapter;
 
     /*
      * This factory method is used instead of overloading the default no-arg constructor
@@ -57,10 +58,16 @@ public class TopicListFragment extends BaseFragment implements ITopicListFragmen
         }
 
         LinearLayoutManager topicLayoutManager = new LinearLayoutManager(context);
-        TopicListAdapter topicListAdapter = new TopicListAdapter(test, mTopicClickListener);
+        mTopicListAdapter = new TopicListAdapter(test);
+
+        // If this fragment was created for the first time (i.e. its state wasn't saved by the
+        // ViewPager), we already had a chance to register a presenter
+        if (mTopicClickListener != null) {
+            mTopicListAdapter.setTopicClickListener(mTopicClickListener);
+        }
 
         topicList.setLayoutManager(topicLayoutManager);
-        topicList.setAdapter(topicListAdapter);
+        topicList.setAdapter(mTopicListAdapter);
 
         return topicList;
     }
@@ -68,5 +75,10 @@ public class TopicListFragment extends BaseFragment implements ITopicListFragmen
     @Override
     public void setTopicClickListener(TopicView.OnClickListener listener) {
         mTopicClickListener = listener;
+
+        // If this fragment is being recreated by the ViewPager
+        if (mTopicListAdapter != null) {
+            mTopicListAdapter.setTopicClickListener(mTopicClickListener);
+        }
     }
 }

@@ -83,16 +83,12 @@ public class MainFragment extends BaseFragment implements IMainFragment {
             numOpenPages = savedInstanceState.getInt(KEY_NUM_OPEN_PAGES, 0);
         }
 
-        // Find ViewPager and TabLayout in the layout resource, but we don't connect them
-        // until a presenter is registered. This is done to handle the case where Android destroys
-        // and recreates this Fragment before we have a chance to re-find the reference to it and
-        // register a presenter.
         mTopicListPager = (ViewPager) view.findViewById(R.id.topic_list_pager);
         mTopicListPagerAdapter = new TopicListPagerAdapter(fragmentManager);
         mTopicListPager.setAdapter(mTopicListPagerAdapter);
 
         // If this fragment was created for the first time (i.e. its state wasn't saved by the
-        // FragmentManager)
+        // FragmentManager), we already had a chance to register a presenter
         if (mPresenter != null) {
             mTopicListPagerAdapter.setTopicClickListener(mPresenter);
             mTopicListPagerAdapter.addNewPages(numOpenPages);
@@ -176,9 +172,10 @@ public class MainFragment extends BaseFragment implements IMainFragment {
     public void registerPresenter(IMainPresenter presenter) {
         mPresenter = presenter;
 
-        // If this fragment is being recreated by the ViewPager
+        // If this fragment is being recreated by the FragmentManager
         if (mTopicListPagerAdapter != null) {
             mTopicListPagerAdapter.setTopicClickListener(mPresenter);
+
             mTopicListPagerAdapter.notifyDataSetChanged();
         }
     }

@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cngu.androidfun.R;
@@ -20,8 +19,11 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.View
     private List<Topic> mTopicList;
     private TopicView.OnClickListener mTopicClickListener;
 
-    public TopicListAdapter(List<Topic> topics, TopicView.OnClickListener topicClickListener) {
+    public TopicListAdapter(List<Topic> topics) {
         mTopicList = topics;
+    }
+
+    public void setTopicClickListener(TopicView.OnClickListener topicClickListener) {
         mTopicClickListener = topicClickListener;
     }
 

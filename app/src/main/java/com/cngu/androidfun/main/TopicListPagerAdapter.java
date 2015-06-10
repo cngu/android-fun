@@ -3,6 +3,7 @@ package com.cngu.androidfun.main;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.Log;
 import android.view.ViewGroup;
 
 import com.cngu.androidfun.view.TopicView;
@@ -23,6 +24,8 @@ public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         ITopicListFragment item = (TopicListFragment) super.instantiateItem(container, position);
+
+        Log.d("TAG", "instantiateItem " + position);
 
         item.setTopicClickListener(mTopicClickListener);
 
