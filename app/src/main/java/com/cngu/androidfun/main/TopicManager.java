@@ -1,7 +1,6 @@
 package com.cngu.androidfun.main;
 
 import android.os.Bundle;
-import android.view.Menu;
 
 import com.cngu.androidfun.data.ActionTopic;
 import com.cngu.androidfun.data.MenuTopic;
@@ -9,8 +8,6 @@ import com.cngu.androidfun.data.Topic;
 import com.cngu.androidfun.enums.TopicFragmentId;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * A TopicManager serves two purposes:

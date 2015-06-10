@@ -5,8 +5,6 @@ import android.os.Bundle;
 import com.cngu.androidfun.data.MenuTopic;
 import com.cngu.androidfun.data.Topic;
 
-import java.util.List;
-
 public interface ITopicManager {
     /**
      * Returns a previously selected {@link MenuTopic} in the 'selected topic' history.
@@ -18,6 +16,13 @@ public interface ITopicManager {
      */
     MenuTopic getTopicInHistory(int historyIndex);
 
+    /**
+     * Adds a {@link MenuTopic} to the 'selected topic' history stack. To persist the history stack
+     * across orientation changes, see {@link ITopicManager#loadHistory(Bundle)} and
+     * {@link ITopicManager#saveHistory(Bundle)}.
+     *
+     * @param topic A topic to save to the history stack of selected topics.
+     */
     void addTopicToHistory(MenuTopic topic);
 
     /**
