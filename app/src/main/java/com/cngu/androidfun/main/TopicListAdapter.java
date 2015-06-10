@@ -12,6 +12,7 @@ import com.cngu.androidfun.data.MenuTopic;
 import com.cngu.androidfun.data.Topic;
 import com.cngu.androidfun.view.TopicView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.ViewHolder> {
@@ -20,7 +21,7 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.View
     private TopicView.OnClickListener mTopicClickListener;
 
     public TopicListAdapter(List<Topic> topics) {
-        mTopicList = topics;
+        mTopicList = topics == null ? new ArrayList<Topic>() : topics;
     }
 
     public void setTopicClickListener(TopicView.OnClickListener topicClickListener) {
