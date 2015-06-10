@@ -1,5 +1,6 @@
 package com.cngu.androidfun.main;
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,18 +13,12 @@ import com.cngu.androidfun.data.MenuTopic;
 import com.cngu.androidfun.data.Topic;
 import com.cngu.androidfun.view.TopicView;
 
-import java.util.List;
-
 public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.ViewHolder> {
 
-    private List<Topic> mTopicList;
+    private SelectableTopicList mTopicList;
     private TopicView.OnClickListener mTopicClickListener;
 
-    public TopicListAdapter(List<Topic> topics) {
-        mTopicList = topics;
-    }
-
-    public void setTopicList(List<Topic> topicList) {
+    public void setTopicList(SelectableTopicList topicList) {
         mTopicList = topicList;
     }
 
@@ -76,7 +71,10 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.View
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mTopicClickListener.onActionTopicClicked((ActionTopic)topic, topicPosition);
+                    if (!mTopicList.isSelected(topicPosition)) {
+                        mTopicList.setSelected(topicPosition, true);
+                        mTopicClickListener.onActionTopicClicked((ActionTopic) topic, topicPosition);
+                    }
                 }
             });
         } else if (topic instanceof MenuTopic) {
@@ -85,7 +83,10 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.View
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mTopicClickListener.onMenuTopicClicked((MenuTopic)topic, topicPosition);
+                    if (!mTopicList.isSelected(topicPosition)) {
+                        mTopicList.setSelected(topicPosition, true);
+                        mTopicClickListener.onMenuTopicClicked((MenuTopic) topic, topicPosition);
+                    }
                 }
             });
         }

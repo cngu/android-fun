@@ -46,7 +46,7 @@ public class TopicManager implements ITopicManager {
         }
 
         mHistory.add(rootMenu);
-        addTopicToHistory((MenuTopic) rootMenu.getSubtopics()[0]);
+        addTopicToHistory((MenuTopic) rootMenu.getSubtopics().get(0));
     }
 
     @Override

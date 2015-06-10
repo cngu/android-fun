@@ -7,5 +7,13 @@ public interface IMainFragment extends IBaseFragment {
 
     void setTopicManager(ITopicManager topicManager);
 
+    void addNewPage();
+
+    void goToNextPage();
+
+    void goBackToPage(int page);
+
+    int getPageCount();
+
     int getCurrentPage();
 }

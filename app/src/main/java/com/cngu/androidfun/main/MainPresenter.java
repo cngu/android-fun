@@ -29,5 +29,7 @@ public class MainPresenter implements IMainPresenter {
     @Override
     public void onMenuTopicClicked(MenuTopic topic, int position) {
         Log.d(TAG, String.format("Menu Topic on page %d at index %d was clicked!", mView.getCurrentPage(), position));
+
+        //mView.addNewPage();
     }
 }

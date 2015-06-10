@@ -10,10 +10,7 @@ import android.view.ViewGroup;
 
 import com.cngu.androidfun.R;
 import com.cngu.androidfun.base.BaseFragment;
-import com.cngu.androidfun.data.Topic;
 import com.cngu.androidfun.view.TopicView;
-
-import java.util.List;
 
 /**
  * A fragment used to display a list of {@link com.cngu.androidfun.data.Topic}.
@@ -22,7 +19,7 @@ public class TopicListFragment extends BaseFragment implements ITopicListFragmen
 
     private TopicListAdapter mTopicListAdapter;
     private TopicView.OnClickListener mTopicClickListener;
-    private List<Topic> mTopicList;
+    private SelectableTopicList mTopicList;
 
     /*
      * This factory method is used instead of overloading the default no-arg constructor
@@ -46,7 +43,7 @@ public class TopicListFragment extends BaseFragment implements ITopicListFragmen
         Context context = topicList.getContext();
 
         LinearLayoutManager topicLayoutManager = new LinearLayoutManager(context);
-        mTopicListAdapter = new TopicListAdapter(null);
+        mTopicListAdapter = new TopicListAdapter();
 
         // If this fragment was created for the first time (i.e. its state wasn't saved by the
         // ViewPager), then we already had a chance to register both a topic click listener and a
@@ -67,7 +64,7 @@ public class TopicListFragment extends BaseFragment implements ITopicListFragmen
     }
 
     @Override
-    public void setTopicList(List<Topic> topicList) {
+    public void setTopicList(SelectableTopicList topicList) {
         mTopicList = topicList;
 
         // If this fragment is being recreated by the ViewPager, then we're now registering a click

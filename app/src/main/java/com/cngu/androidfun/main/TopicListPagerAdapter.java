@@ -9,7 +9,6 @@ import com.cngu.androidfun.data.MenuTopic;
 import com.cngu.androidfun.data.Topic;
 import com.cngu.androidfun.view.TopicView;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -18,11 +17,14 @@ import java.util.List;
 public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
 
     private ITopicManager mTopicManager;
+    private IListSelector mListSelector;
+
     private TopicView.OnClickListener mTopicClickListener;
     private int mPageCount;
 
     public TopicListPagerAdapter(FragmentManager fm) {
         super(fm);
+        mListSelector = new SingleListSelector();
         mPageCount = 0;
     }
 
@@ -31,9 +33,10 @@ public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
         ITopicListFragment item = (TopicListFragment) super.instantiateItem(container, position);
 
         MenuTopic topicInHistory = mTopicManager.getTopicInHistory(position);
-        List<Topic> selectableTopics = Arrays.asList(topicInHistory.getSubtopics());
-        item.setTopicList(selectableTopics);
+        List<Topic> topicList = topicInHistory.getSubtopics();
+        SelectableTopicList selectableTopicList = new SelectableTopicList(topicList, mListSelector);
 
+        item.setTopicList(selectableTopicList);
         item.setTopicClickListener(mTopicClickListener);
 
         return item;
@@ -76,7 +79,7 @@ public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
             return;
         }
 
-        goBackToPage(mPageCount-2);
+        mPageCount--;
         notifyDataSetChanged();
     }
 
@@ -86,6 +89,10 @@ public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
      * @param pageIndex 0-based index of the page to go back to.
      */
     public void goBackToPage(int pageIndex) {
+        if (pageIndex < 0 || pageIndex >= mPageCount-1) {
+            return;
+        }
+
         mPageCount = pageIndex + 1;
         notifyDataSetChanged();
     }

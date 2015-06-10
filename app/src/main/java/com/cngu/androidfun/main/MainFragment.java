@@ -1,7 +1,6 @@
 package com.cngu.androidfun.main;
 
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
@@ -10,7 +9,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,6 +26,10 @@ import com.cngu.androidfun.base.BaseFragment;
 public class MainFragment extends BaseFragment implements IMainFragment {
 
     private static final String KEY_NUM_OPEN_PAGES = "cngu.key.NUM_OPEN_PAGES";
+
+    // This should always be 1 because if set higher, we can't predict the path the user navigated
+    // through the menus to get to the pages past the first.
+    public static final int STARTING_NUMBER_OF_PAGES = 1;
 
     /*
      * It just so happens that the delay of:
@@ -82,9 +84,9 @@ public class MainFragment extends BaseFragment implements IMainFragment {
         // Load state
         int numOpenPages;
         if (savedInstanceState == null) {
-            numOpenPages = 0;
+            numOpenPages = STARTING_NUMBER_OF_PAGES;
         } else {
-            numOpenPages = savedInstanceState.getInt(KEY_NUM_OPEN_PAGES, 0);
+            numOpenPages = savedInstanceState.getInt(KEY_NUM_OPEN_PAGES, STARTING_NUMBER_OF_PAGES);
         }
 
         mTopicListPager = (ViewPager) view.findViewById(R.id.topic_list_pager);
@@ -137,30 +139,7 @@ public class MainFragment extends BaseFragment implements IMainFragment {
             case R.id.action_settings:
                 return true;
             case R.id.add_page:
-                mTopicListPagerAdapter.addNewPage();
-
-                int newPageIndex = mTopicListPagerAdapter.getCount() - 1;
-                CharSequence newPageTitle = mTopicListPagerAdapter.getPageTitle(newPageIndex);
-                final TabLayout.Tab newTab = mTopicListPagerTabs.newTab().setText(newPageTitle);
-
-                /*
-                 * DESIGN SUPPORT LIBRARY 22.2.0 BUG: If a new tab is added and selected
-                 * immediately, the tab underline/indicator scrolls rapidly to the left and
-                 * off-screen. Subsequent tabs that are added seems to either exhibit the same
-                 * behavior, or select the tab prior to the new tab.
-                 *
-                 * WORKAROUND: Add a new tab, and manually select it after a delay. This is
-                 * equivalent to TabLayout.addTab(Tab, true), but with a delay introduced before
-                 * selecting the newly added tab.
-                 */
-                mTopicListPagerTabs.addTab(newTab);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        newTab.select();
-                    }
-                }, SELECT_NEW_TAB_DELAY);
-
+                addNewPage();
                 return true;
             case R.id.remove_page:
                 int removedPageIndex = mTopicListPagerAdapter.getCount() - 1;
@@ -180,6 +159,60 @@ public class MainFragment extends BaseFragment implements IMainFragment {
     }
 
     @Override
+    public void addNewPage() {
+        mTopicListPagerAdapter.addNewPage();
+
+        int newPageIndex = mTopicListPagerAdapter.getCount() - 1;
+        CharSequence newPageTitle = mTopicListPagerAdapter.getPageTitle(newPageIndex);
+        final TabLayout.Tab newTab = mTopicListPagerTabs.newTab().setText(newPageTitle);
+
+        /*
+         * DESIGN SUPPORT LIBRARY 22.2.0 BUG: If a new tab is added and selected
+         * immediately, the tab underline/indicator scrolls rapidly to the left and
+         * off-screen. Subsequent tabs that are added seems to either exhibit the same
+         * behavior, or select the tab prior to the new tab.
+         *
+         * WORKAROUND: Add a new tab, and manually select it after a delay. This is
+         * equivalent to TabLayout.addTab(Tab, true), but with a delay introduced before
+         * selecting the newly added tab.
+         */
+        mTopicListPagerTabs.addTab(newTab);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                newTab.select();
+            }
+        }, SELECT_NEW_TAB_DELAY);
+    }
+
+    @Override
+    public void goToNextPage() {
+        int currentTabIndex = getCurrentPage();
+
+        if (currentTabIndex >= mTopicListPagerTabs.getTabCount() - 1) {
+            return;
+        }
+
+        TabLayout.Tab nextTab = mTopicListPagerTabs.getTabAt(currentTabIndex+1);
+        nextTab.select();
+    }
+
+    @Override
+    public void goBackToPage(int page) {
+        mTopicListPagerAdapter.goBackToPage(page);
+    }
+
+    @Override
+    public int getPageCount() {
+        return mTopicListPagerAdapter.getCount();
+    }
+
+    @Override
+    public int getCurrentPage() {
+        return mTopicListPager.getCurrentItem();
+    }
+
+    @Override
     public void registerPresenter(IMainPresenter presenter) {
         mPresenter = presenter;
     }
@@ -187,10 +220,5 @@ public class MainFragment extends BaseFragment implements IMainFragment {
     @Override
     public void setTopicManager(ITopicManager topicManager) {
         mTopicManager = topicManager;
-    }
-
-    @Override
-    public int getCurrentPage() {
-        return mTopicListPager.getCurrentItem();
     }
 }

@@ -38,12 +38,10 @@ public class MenuTopic extends Topic {
     }
 
     /**
-     * @return An array of all subtopics.
+     * @return A list of all subtopics.
      */
-    public Topic[] getSubtopics() {
-        Topic[] result = new Topic[mSubtopics.size()];
-        mSubtopics.toArray(result);
-        return result;
+    public List<Topic> getSubtopics() {
+        return new ArrayList<>(mSubtopics);
     }
 
     /**
