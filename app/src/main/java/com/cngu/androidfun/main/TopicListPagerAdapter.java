@@ -32,15 +32,7 @@ public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         ITopicListFragment item = (TopicListFragment) super.instantiateItem(container, position);
 
-        // TODO: Load list of topics and set it into setTopicManager
-        List<Topic> test = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            test.add(new MenuTopic("Menu Topic", "Menu Topic " + i, null));
-        }
-        for (int i = 0; i < 10; i++) {
-            test.add(new ActionTopic("Action Topic", "Action Topic " + i, TopicFragmentId.TEST));
-        }
-        item.setTopicList(test);
+        item.setTopicList(mTopicManager.getTopics(position));
         item.setTopicClickListener(mTopicClickListener);
 
         return item;
