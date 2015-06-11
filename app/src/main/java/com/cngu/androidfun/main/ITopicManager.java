@@ -6,8 +6,12 @@ import com.cngu.androidfun.data.MenuTopic;
 import com.cngu.androidfun.data.Topic;
 
 public interface ITopicManager {
+    boolean isActionTopicReached();
+
+    int getHistorySize();
+
     /**
-     * Returns a previously selected {@link Topic} in the 'selected topic' history.
+     * Returns a previously selected {@link Topic} in the 'selected topic' history stack.
      *
      * @param historyIndex The index of the selected {@link Topic} in history, where 0 is the
      *                     oldest {@link MenuTopic}.

@@ -149,6 +149,9 @@ public class MainFragment extends BaseFragment implements IMainFragment {
                 int removedPageIndex = mTopicListPagerAdapter.getCount() - 1;
 
                 if (removedPageIndex >= 0) {
+                    if (mTopicManager.isActionTopicReached()) {
+                        mTopicManager.popTopicFromHistory();
+                    }
                     mTopicManager.popTopicFromHistory();
 
                     // Must refresh the ViewPager BEFORE removing the tab so that the tab

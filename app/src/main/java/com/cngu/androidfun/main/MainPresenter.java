@@ -25,6 +25,9 @@ public class MainPresenter implements IMainPresenter {
     public void onActionTopicClicked(ActionTopic topic, TopicListAdapter.ViewHolder viewHolder) {
         Log.d(TAG, String.format("Action Topic on page %d at index %d was clicked!", mView.getCurrentPage(), viewHolder.getAdapterPosition()));
 
+        if (mTopicManager.isActionTopicReached()) {
+            mTopicManager.popTopicFromHistory();
+        }
         mTopicManager.pushTopicToHistory(topic);
     }
 

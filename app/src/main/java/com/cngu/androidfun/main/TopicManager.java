@@ -23,10 +23,12 @@ public class TopicManager implements ITopicManager {
 
     public ArrayList<Topic> mTopics;
     public ArrayList<Topic> mHistory;
+    private boolean mActionTopicReached;
 
     public TopicManager() {
         mTopics = new ArrayList<>();
         mHistory = new ArrayList<>();
+        mActionTopicReached = false;
 
         MenuTopic rootMenu = new MenuTopic(null, null);
 
@@ -49,6 +51,16 @@ public class TopicManager implements ITopicManager {
     }
 
     @Override
+    public boolean isActionTopicReached() {
+        return mActionTopicReached;
+    }
+
+    @Override
+    public int getHistorySize() {
+        return mHistory.size();
+    }
+
+    @Override
     public Topic getTopicInHistory(int pageNumber) {
         if (pageNumber < 0 || pageNumber >= mHistory.size()) {
             return null;
@@ -59,11 +71,22 @@ public class TopicManager implements ITopicManager {
 
     @Override
     public void pushTopicToHistory(Topic topic) {
+        if (mActionTopicReached) {
+            throw new IllegalStateException("Cannot navigate to Topics beyond an ActionTopic.");
+        }
+
+        if (topic instanceof ActionTopic) {
+            mActionTopicReached = true;
+        }
+
         mHistory.add(topic);
     }
 
     @Override
     public Topic popTopicFromHistory() {
+        if (mActionTopicReached) {
+            mActionTopicReached = false;
+        }
         return mHistory.remove(mHistory.size()-1);
     }
 
