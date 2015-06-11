@@ -13,6 +13,16 @@ public class SingleListSelector implements IListSelector {
     }
 
     @Override
+    public void clearSelection() {
+        mSelectedIndex = SELECTED_NONE;
+    }
+
+    @Override
+    public int[] getSelected() {
+        return new int[] {mSelectedIndex};
+    }
+
+    @Override
     public void setSelected(int position, boolean selected) {
         mSelectedIndex = selected ? position : SELECTED_NONE;
     }

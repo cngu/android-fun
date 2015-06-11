@@ -100,6 +100,16 @@ public class MenuTopic extends Topic {
         mSubtopics.clear();
     }
 
+    public int getIndexOfSubtopic(Topic selectedTopic) {
+        for (int i = 0; i < mSubtopics.size(); i++) {
+            if (selectedTopic == mSubtopics.get(i)) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder(MenuTopic.class.getSimpleName()).append("{")

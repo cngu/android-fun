@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * A TopicManager serves two purposes:
  * <ol>
  *     <li>contain an in-memory (i.e. not-persisted) database of {@link Topic}s.
- *     <li>manage a history of selected {@link MenuTopic}s.
+ *     <li>manage a history of selected {@link Topic}s.
  * </ol>
  *
  * <p>Due to the static nature of the Topic menu navigation UI, persistence of these Topics is not
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 public class TopicManager implements ITopicManager {
 
     public ArrayList<Topic> mTopics;
-    public ArrayList<MenuTopic> mHistory;
+    public ArrayList<Topic> mHistory;
 
     public TopicManager() {
         mTopics = new ArrayList<>();
@@ -46,11 +46,10 @@ public class TopicManager implements ITopicManager {
         }
 
         mHistory.add(rootMenu);
-        addTopicToHistory((MenuTopic) rootMenu.getSubtopics().get(0));
     }
 
     @Override
-    public MenuTopic getTopicInHistory(int pageNumber) {
+    public Topic getTopicInHistory(int pageNumber) {
         if (pageNumber < 0 || pageNumber >= mHistory.size()) {
             return null;
         }
@@ -59,8 +58,13 @@ public class TopicManager implements ITopicManager {
     }
 
     @Override
-    public void addTopicToHistory(MenuTopic topic) {
+    public void pushTopicToHistory(Topic topic) {
         mHistory.add(topic);
+    }
+
+    @Override
+    public Topic popTopicFromHistory() {
+        return mHistory.remove(mHistory.size()-1);
     }
 
     @Override

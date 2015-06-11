@@ -22,14 +22,17 @@ public class MainPresenter implements IMainPresenter {
     }
 
     @Override
-    public void onActionTopicClicked(ActionTopic topic, int position) {
-        Log.d(TAG, String.format("Action Topic on page %d at index %d was clicked!", mView.getCurrentPage(), position));
+    public void onActionTopicClicked(ActionTopic topic, TopicListAdapter.ViewHolder viewHolder) {
+        Log.d(TAG, String.format("Action Topic on page %d at index %d was clicked!", mView.getCurrentPage(), viewHolder.getAdapterPosition()));
+
+        mTopicManager.pushTopicToHistory(topic);
     }
 
     @Override
-    public void onMenuTopicClicked(MenuTopic topic, int position) {
-        Log.d(TAG, String.format("Menu Topic on page %d at index %d was clicked!", mView.getCurrentPage(), position));
+    public void onMenuTopicClicked(MenuTopic topic, TopicListAdapter.ViewHolder viewHolder) {
+        Log.d(TAG, String.format("Menu Topic on page %d at index %d was clicked!", mView.getCurrentPage(), viewHolder.getAdapterPosition()));
 
-        //mView.addNewPage();
+        mTopicManager.pushTopicToHistory(topic);
+        mView.addNewPage();
     }
 }

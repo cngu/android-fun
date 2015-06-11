@@ -1,6 +1,7 @@
 package com.cngu.androidfun.main;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,10 +17,13 @@ import com.cngu.androidfun.view.TopicView;
  * A fragment used to display a list of {@link com.cngu.androidfun.data.Topic}.
  */
 public class TopicListFragment extends BaseFragment implements ITopicListFragment {
+    private static final String TAG = TopicListFragment.class.getSimpleName();
 
     private TopicListAdapter mTopicListAdapter;
     private TopicView.OnClickListener mTopicClickListener;
     private SelectableTopicList mTopicList;
+
+    private Bundle mStateBundle;
 
     /*
      * This factory method is used instead of overloading the default no-arg constructor
@@ -37,12 +41,18 @@ public class TopicListFragment extends BaseFragment implements ITopicListFragmen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        mStateBundle = savedInstanceState;
+
         RecyclerView topicList = (RecyclerView) inflater.inflate(
                 R.layout.fragment_topic_list, container, false);
 
+        // Disable animations if we're on LOLLIPOP or higher because we'll supply our own animations.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            topicList.setItemAnimator(null);
+        }
+
         Context context = topicList.getContext();
 
-        LinearLayoutManager topicLayoutManager = new LinearLayoutManager(context);
         mTopicListAdapter = new TopicListAdapter();
 
         // If this fragment was created for the first time (i.e. its state wasn't saved by the
@@ -57,10 +67,15 @@ public class TopicListFragment extends BaseFragment implements ITopicListFragmen
             mTopicListAdapter.setTopicList(mTopicList);
         }
 
-        topicList.setLayoutManager(topicLayoutManager);
+        topicList.setLayoutManager(new LinearLayoutManager(context));
         topicList.setAdapter(mTopicListAdapter);
 
         return topicList;
+    }
+
+    @Override
+    public void setSelected(int selectedIndex) {
+        mTopicList.setSelected(selectedIndex, true);
     }
 
     @Override

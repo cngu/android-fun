@@ -17,6 +17,10 @@ public class SelectableTopicList {
         mSelector = selector;
     }
 
+    public int[] getSelected() {
+        return mSelector.getSelected();
+    }
+
     public void setSelected(int topicIndex, boolean selected) {
         if (topicIndex < 0 || topicIndex >= mTopics.size()) {
             return;

@@ -3,6 +3,7 @@ package com.cngu.androidfun.main;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.Log;
 import android.view.ViewGroup;
 
 import com.cngu.androidfun.data.MenuTopic;
@@ -17,14 +18,12 @@ import java.util.List;
 public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
 
     private ITopicManager mTopicManager;
-    private IListSelector mListSelector;
 
     private TopicView.OnClickListener mTopicClickListener;
     private int mPageCount;
 
     public TopicListPagerAdapter(FragmentManager fm) {
         super(fm);
-        mListSelector = new SingleListSelector();
         mPageCount = 0;
     }
 
@@ -32,12 +31,18 @@ public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         ITopicListFragment item = (TopicListFragment) super.instantiateItem(container, position);
 
-        MenuTopic topicInHistory = mTopicManager.getTopicInHistory(position);
+        MenuTopic topicInHistory = (MenuTopic) mTopicManager.getTopicInHistory(position);
+        Topic selectedTopic = mTopicManager.getTopicInHistory(position+1);
+
         List<Topic> topicList = topicInHistory.getSubtopics();
-        SelectableTopicList selectableTopicList = new SelectableTopicList(topicList, mListSelector);
+        IListSelector listSelector = new SingleListSelector();
+        SelectableTopicList selectableTopicList = new SelectableTopicList(topicList, listSelector);
 
         item.setTopicList(selectableTopicList);
         item.setTopicClickListener(mTopicClickListener);
+        if (selectedTopic != null) {
+            item.setSelected(topicInHistory.getIndexOfSubtopic(selectedTopic));
+        }
 
         return item;
     }
