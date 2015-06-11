@@ -2,7 +2,9 @@ package com.cngu.androidfun.main;
 
 import android.animation.Animator;
 import android.os.Build;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
@@ -23,6 +25,11 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.View
     private TopicView.OnClickListener mTopicClickListener;
 
     private Animator mSelectionAnimator;
+    private long mItemChangeAnimDuration;
+
+    public TopicListAdapter(RecyclerView recyclerView) {
+        mItemChangeAnimDuration = recyclerView.getItemAnimator().getChangeDuration();
+    }
 
     public void setTopicList(SelectableTopicList topicList) {
         mTopicList = topicList;
@@ -115,16 +122,16 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.View
         final int topicPosition = holder.getAdapterPosition();
         final Topic topic = mTopicList.get(topicPosition);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-        {
-            topicView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // Ignore taps on items that are already selected
-                    if (mTopicList.isSelected(topicPosition)) {
-                        return;
-                    }
+        topicView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Ignore taps on items that are already selected
+                if (mTopicList.isSelected(topicPosition)) {
+                    return;
+                }
 
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                {
                     setNewSelection(topicPosition);
 
                     // Stop any existing animation
@@ -172,23 +179,21 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.View
                     // Animate the selection background
                     mSelectionAnimator.start();
                 }
-            });
-        }
-        else
-        {
-            topicView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (mTopicList.isSelected(topicPosition)) {
-                        return;
-                    }
-
+                else
+                {
                     setNewSelection(topicPosition);
                     notifyItemChanged(topicPosition);
-                    notifyClickListener(topic, holder);
+
+                    // Wait for notifyItemChanged to finish so the user can see the selection animation
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            notifyClickListener(topic, holder);
+                        }
+                    }, mItemChangeAnimDuration);
                 }
-            });
-        }
+            }
+        });
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

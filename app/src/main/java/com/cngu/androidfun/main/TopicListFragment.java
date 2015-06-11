@@ -47,13 +47,13 @@ public class TopicListFragment extends BaseFragment implements ITopicListFragmen
                 R.layout.fragment_topic_list, container, false);
 
         // Disable animations if we're on LOLLIPOP or higher because we'll supply our own animations.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            topicList.setItemAnimator(null);
-        }
+        //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        //    topicList.setItemAnimator(null);
+        //}
 
         Context context = topicList.getContext();
 
-        mTopicListAdapter = new TopicListAdapter();
+        mTopicListAdapter = new TopicListAdapter(topicList);
 
         // If this fragment was created for the first time (i.e. its state wasn't saved by the
         // ViewPager), then we already had a chance to register both a topic click listener and a

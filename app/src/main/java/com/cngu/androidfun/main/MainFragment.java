@@ -105,6 +105,8 @@ public class MainFragment extends BaseFragment implements IMainFragment {
         mTopicListPagerAdapter.setTopicClickListener(mPresenter);
         mTopicListPagerAdapter.addNewPages(numOpenPages);
 
+        // TODO: Restore presenter state (or before mTopicListPagerAdapter.addNewPages())
+
         mTopicListPager.setAdapter(mTopicListPagerAdapter);
 
         mTopicListPagerTabs = (TabLayout) view.findViewById(R.id.topic_list_pager_tabs);
@@ -118,6 +120,8 @@ public class MainFragment extends BaseFragment implements IMainFragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(KEY_NUM_OPEN_PAGES, mTopicListPagerAdapter.getCount());
+
+        // TODO: Save presenter state
     }
 
     @Override

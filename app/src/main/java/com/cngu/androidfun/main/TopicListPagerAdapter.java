@@ -34,6 +34,10 @@ public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
         MenuTopic topicInHistory = (MenuTopic) mTopicManager.getTopicInHistory(position);
         Topic selectedTopic = mTopicManager.getTopicInHistory(position+1);
 
+        Log.d("TAG", "Instantiate Item " + position);
+        Log.d("TAG", "HISTORY " + topicInHistory);
+        Log.d("TAG", "SELECTED " + selectedTopic);
+
         List<Topic> topicList = topicInHistory.getSubtopics();
         IListSelector listSelector = new SingleListSelector();
         SelectableTopicList selectableTopicList = new SelectableTopicList(topicList, listSelector);
