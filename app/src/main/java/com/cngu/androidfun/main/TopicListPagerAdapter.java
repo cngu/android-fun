@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.cngu.androidfun.data.MenuTopic;
 import com.cngu.androidfun.data.Topic;
+import com.cngu.androidfun.debug.Debug;
 import com.cngu.androidfun.view.TopicView;
 
 import java.util.List;
@@ -16,6 +17,9 @@ import java.util.List;
  * A {@link android.support.v4.view.ViewPager} adapter to manage a list of {@link TopicListFragment}.
  */
 public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
+    private static final String TAG = TopicListPagerAdapter.class.getSimpleName();
+
+    private static final boolean DEBUG = false;
 
     private ITopicManager mTopicManager;
 
@@ -31,12 +35,12 @@ public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         ITopicListFragment item = (TopicListFragment) super.instantiateItem(container, position);
 
+        if (Debug.isInDebugMode(DEBUG)) {
+            Log.d(TAG, "instantiateItem(ViewGroup, " + position + ")");
+        }
+
         MenuTopic topicInHistory = (MenuTopic) mTopicManager.getTopicInHistory(position);
         Topic selectedTopic = mTopicManager.getTopicInHistory(position+1);
-
-        Log.d("TAG", "Instantiate Item " + position);
-        Log.d("TAG", "HISTORY " + topicInHistory);
-        Log.d("TAG", "SELECTED " + selectedTopic);
 
         List<Topic> topicList = topicInHistory.getSubtopics();
         IListSelector listSelector = new SingleListSelector();
@@ -44,6 +48,7 @@ public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
 
         item.setTopicList(selectableTopicList);
         item.setTopicClickListener(mTopicClickListener);
+
         if (selectedTopic != null) {
             item.setSelected(topicInHistory.getIndexOfSubtopic(selectedTopic));
         }
@@ -53,6 +58,10 @@ public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
+        if (Debug.isInDebugMode(DEBUG)) {
+            Log.d(TAG, "getItem(" + position + ")");
+        }
+
         return TopicListFragment.newInstance().asFragment();
     }
 

@@ -1,16 +1,17 @@
 package com.cngu.androidfun.main;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.cngu.androidfun.R;
 import com.cngu.androidfun.base.BaseFragment;
+import com.cngu.androidfun.debug.Debug;
 import com.cngu.androidfun.view.TopicView;
 
 /**
@@ -18,6 +19,8 @@ import com.cngu.androidfun.view.TopicView;
  */
 public class TopicListFragment extends BaseFragment implements ITopicListFragment {
     private static final String TAG = TopicListFragment.class.getSimpleName();
+
+    private static boolean DEBUG = true;
 
     private TopicListAdapter mTopicListAdapter;
     private TopicView.OnClickListener mTopicClickListener;
@@ -41,6 +44,8 @@ public class TopicListFragment extends BaseFragment implements ITopicListFragmen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+
         mStateBundle = savedInstanceState;
 
         RecyclerView topicList = (RecyclerView) inflater.inflate(
@@ -55,14 +60,28 @@ public class TopicListFragment extends BaseFragment implements ITopicListFragmen
 
         mTopicListAdapter = new TopicListAdapter(topicList);
 
-        // If this fragment was created for the first time (i.e. its state wasn't saved by the
-        // ViewPager), then we already had a chance to register both a topic click listener and a
-        // list of topics for the RecyclerView.
-        // - This check is needed because unlike MainFragment, it may be the case that this fragment
-        // is recreated after a rotation and onCreateView is called BEFORE we have had a chance to
-        // register the topic click listener and topic list.
-        // - The reason may be because this Fragment is within (and being managed by) a ViewPager.
+        // On first creation, no ViewPager pages are created yet, so its adapter's getItem() is
+        // called to create the page for the first time. The adapter overrides instantiateItem()
+        // to initialize this fragment (that was just created in getItem()) with the topic list and
+        // click listener. This fragment's lifecycle now begins with onAttach().
+        //
+        // On recreation, similarly to fragments managed by FragmentManager, onAttach() and
+        // onCreate() are called before much else can happen, even before MainActivity.onCreate().
+        // However, unlike FragmentManager, the ViewPager proceeds to restore this fragment's state
+        // as well via onCreateView(), onActivityCreated(), and onViewStateRestored(). Eventually
+        // onStart() and onResume() are called, and the ViewPager finally calls the adapter's
+        // instantiateItem() and we finally have a chance to do our initialization. No further
+        // lifecycle callbacks are invoked after this (until onPause()).
+        //
+        // Thus, this check is needed here (and in setTopicList() and setTopicClickListener())
+        // because this fragment may be initialized before (first creation) or after (recreation)
+        // onCreateView(), and we can't move this code to a later lifecycle callback because there
+        // are none that occur after the adapter's instantiateItem().
         if (mTopicClickListener != null && mTopicList != null) {
+            if (Debug.isInDebugMode(DEBUG)) {
+                Log.d(TAG, "onCreateView - topic click listener and topic list not set yet");
+            }
+
             mTopicListAdapter.setTopicClickListener(mTopicClickListener);
             mTopicListAdapter.setTopicList(mTopicList);
         }
@@ -80,6 +99,10 @@ public class TopicListFragment extends BaseFragment implements ITopicListFragmen
 
     @Override
     public void setTopicList(SelectableTopicList topicList) {
+        if (Debug.isInDebugMode(DEBUG)) {
+            Log.d(TAG, "setTopicList");
+        }
+
         mTopicList = topicList;
 
         // If this fragment is being recreated by the ViewPager, then we're now registering a click
@@ -91,6 +114,10 @@ public class TopicListFragment extends BaseFragment implements ITopicListFragmen
 
     @Override
     public void setTopicClickListener(TopicView.OnClickListener listener) {
+        if (Debug.isInDebugMode(DEBUG)) {
+            Log.d(TAG, "setTopicClickListener");
+        }
+
         mTopicClickListener = listener;
 
         // If this fragment is being recreated by the ViewPager, then we're now registering a click
@@ -99,4 +126,11 @@ public class TopicListFragment extends BaseFragment implements ITopicListFragmen
             mTopicListAdapter.setTopicClickListener(mTopicClickListener);
         }
     }
+
+    //region ILifecycleLoggable
+    @Override
+    public boolean onLogLifecycle() {
+        return false;
+    }
+    //endregion
 }

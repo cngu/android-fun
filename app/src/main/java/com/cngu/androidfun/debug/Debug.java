@@ -16,8 +16,7 @@ public class Debug {
      */
     public static final boolean DEBUG = BuildConfig.DEBUG;
 
-    public static final boolean DEBUG_ACTIVIYTY_LIFECYCLE = DEBUG && true;
-    public static final boolean DEBUG_FRAGMENT_LIFECYCLE  = DEBUG && true;
+    public static final boolean DEBUG_TOPIC_NAVIGATION = DEBUG && true;
 
     /**
      * Used to determine if you can perform logging based on local debug flags (i.e. non-global

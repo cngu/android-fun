@@ -2,13 +2,13 @@ package com.cngu.androidfun.main;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.cngu.androidfun.R;
+import com.cngu.androidfun.base.BaseActivity;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final String FRAGMENT_TAG_MAIN = "cngu.fragment.tag.MAIN";
 
@@ -47,4 +47,11 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
         }
     }
+
+    //region ILifecycleLoggable
+    @Override
+    public boolean onLogLifecycle() {
+        return false;
+    }
+    //endregion
 }

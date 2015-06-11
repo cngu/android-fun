@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -63,14 +64,10 @@ public class MainFragment extends BaseFragment implements IMainFragment {
     public MainFragment() {}
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_main, container, false);
 
@@ -92,20 +89,23 @@ public class MainFragment extends BaseFragment implements IMainFragment {
         mTopicListPager = (ViewPager) view.findViewById(R.id.topic_list_pager);
         mTopicListPagerAdapter = new TopicListPagerAdapter(fragmentManager);
 
-        // I'm not entirely sure why, but it's guaranteed that the TopicManager and Presenter are
-        // set by MainActivity.onCreate() BEFORE this onCreateView is called. This is always the case
-        // regardless if a rotation occurs and this fragment is recreated for us. This fragment is
-        // being onAttach'd and onCreate'd BEFORE MainActivity.onCreate() even starts, but
-        // onCreateView is always called AFTER MainActivity.onCreate() finishes. This means we always
-        // have a chance to register the TopicManager and Presenter here, even if the system
-        // recreates and attaches this fragment for us after rotation.
-        // - This described behavior seems to only occur for fragments managed by FragmentManager.
-        //   For fragments in ViewPager, see TopicListFragment to see how they should be handled.
+        // On first creation, MainActivity.onCreate() is always executed and finished before this
+        // Fragment is even attached.
+        //
+        // On recreation, this fragment's onAttach() and onCreate() happen before
+        // MainActivity.onCreate(), but onCreateView() always happens after.
+        //
+        // Thus, if this fragment is initialized in MainActivity.onCreate(), then everything will be
+        // set by the time it reaches onCreateView().
+        //
+        // NOTE: This behavior only applies to fragments managed by FragmentManager. Fragments in
+        // ViewPagers have their state managed by the ViewPager: see TopicListFragment to see how
+        // that should be handled.
         mTopicListPagerAdapter.setTopicManager(mTopicManager);
         mTopicListPagerAdapter.setTopicClickListener(mPresenter);
         mTopicListPagerAdapter.addNewPages(numOpenPages);
 
-        // TODO: Restore presenter state (or before mTopicListPagerAdapter.addNewPages())
+        // TODO: Restore TopicManager state (or before mTopicListPagerAdapter.addNewPages())
 
         mTopicListPager.setAdapter(mTopicListPagerAdapter);
 
@@ -121,7 +121,7 @@ public class MainFragment extends BaseFragment implements IMainFragment {
         super.onSaveInstanceState(outState);
         outState.putInt(KEY_NUM_OPEN_PAGES, mTopicListPagerAdapter.getCount());
 
-        // TODO: Save presenter state
+        // TODO: Save TopicManager state
     }
 
     @Override
@@ -230,4 +230,11 @@ public class MainFragment extends BaseFragment implements IMainFragment {
     public void setTopicManager(ITopicManager topicManager) {
         mTopicManager = topicManager;
     }
+
+    //region ILifecycleLoggable
+    @Override
+    public boolean onLogLifecycle() {
+        return false;
+    }
+    //endregion
 }
