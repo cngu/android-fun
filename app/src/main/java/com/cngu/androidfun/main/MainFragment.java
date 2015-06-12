@@ -152,8 +152,10 @@ public class MainFragment extends BaseFragment implements IMainFragment {
                 addNewPage();
                 return true;
             case R.id.remove_page:
-                int removedPageIndex = mTopicListPagerAdapter.getCount() - 1;
+                final int removedPageIndex = mTopicListPagerAdapter.getCount() - 1;
 
+                Log.d(TAG, "removedPageIndex: " + removedPageIndex);
+                Log.d(TAG, "Num tabs: " + mTopicListPagerTabs.getTabCount());
                 if (removedPageIndex >= 0) {
                     if (mTopicManager.isActionTopicReached()) {
                         mTopicManager.popTopicFromHistory();
@@ -164,6 +166,7 @@ public class MainFragment extends BaseFragment implements IMainFragment {
                     // underline/indicator can be seen animating back to the previous tab.
                     mTopicListPagerAdapter.goBackOnePage();
 
+                    mTopicListPagerTabs.getTabAt(removedPageIndex-1).select();
                     mTopicListPagerTabs.removeTabAt(removedPageIndex);
                 }
 
@@ -248,3 +251,4 @@ public class MainFragment extends BaseFragment implements IMainFragment {
     }
     //endregion
 }
+

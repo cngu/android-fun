@@ -41,6 +41,8 @@ public class MainPresenter implements IMainPresenter {
 
         if (currentPage < lastPage) {
             int numTopicsInHistoryToRemove = mTopicManager.getHistorySize() - currentPage - 1;
+            Log.d(TAG, "History size: " + mTopicManager.getHistorySize());
+            Log.d(TAG, "Number of topics to remove: " + numTopicsInHistoryToRemove);
             while (numTopicsInHistoryToRemove-- > 0) {
                 mTopicManager.popTopicFromHistory();
             }

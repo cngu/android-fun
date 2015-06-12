@@ -36,6 +36,13 @@ public class TopicManager implements ITopicManager {
         for (int i = 0; i < 10; i++) {
             MenuTopic mt = new MenuTopic("Menu Topic", "Menu Topic " + i, null);
             for (int j = 0; j < 5; j++) {
+                MenuTopic mt2 = new MenuTopic("Nested Menu Topic", "Nested Menu Topic " + j, null);
+                for (int k = 0; k < 5; k++) {
+                    mt2.addSubtopic(new ActionTopic("Nested Action Topic", "Nested Action Topic " + j, TopicFragmentId.TEST));
+                }
+                mt.addSubtopic(mt2);
+            }
+            for (int j = 0; j < 5; j++) {
                 mt.addSubtopic(new ActionTopic("Nested Action Topic", "Nested Action Topic " + j, TopicFragmentId.TEST));
             }
             mTopics.add(mt);

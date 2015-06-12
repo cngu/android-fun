@@ -108,7 +108,7 @@ public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
             return;
         }
 
-        mPageCount -= pageIndex+1;
+        mPageCount = pageIndex + 1;
 
         notifyDataSetChanged();
     }
