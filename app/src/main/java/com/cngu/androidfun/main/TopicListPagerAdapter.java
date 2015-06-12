@@ -11,7 +11,6 @@ import com.cngu.androidfun.data.Topic;
 import com.cngu.androidfun.debug.Debug;
 import com.cngu.androidfun.view.TopicView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -73,7 +72,7 @@ public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return "Tab " + position;
+        return mTopicManager.getTopicInHistory(position).getTitle();
     }
 
     @Override

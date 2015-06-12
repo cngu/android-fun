@@ -30,7 +30,7 @@ public class TopicManager implements ITopicManager {
         mHistory = new ArrayList<>();
         mActionTopicReached = false;
 
-        MenuTopic rootMenu = new MenuTopic(null, null);
+        MenuTopic rootMenu = new MenuTopic("MAIN MENU", null);
 
         // Create a static hierarchy of Topics that the user will navigate through.
         for (int i = 0; i < 10; i++) {
