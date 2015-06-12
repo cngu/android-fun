@@ -52,6 +52,7 @@ public class MainFragment extends BaseFragment implements IMainFragment {
     private ViewPager mTopicListPager;
 
     private int mTabTransitionDelay;
+    private boolean mDoneRemove = true;
 
     /*
      * This factory method is used instead of overloading the default no-arg constructor
@@ -162,6 +163,11 @@ public class MainFragment extends BaseFragment implements IMainFragment {
                 addNewPage();
                 return true;
             case R.id.remove_page:
+                if (!mDoneRemove) {
+                    return true;
+                }
+
+                mDoneRemove = false;
                 final int removedPageIndex = mTopicListPagerAdapter.getCount() - 1;
 
                 if (removedPageIndex >= 0) {
@@ -185,6 +191,8 @@ public class MainFragment extends BaseFragment implements IMainFragment {
                             mTopicListPagerAdapter.goBackOnePage();
 
                             mTopicListPagerTabs.removeTabAt(removedPageIndex);
+
+                            mDoneRemove = true;
                         }
                     }, mTabTransitionDelay);
                 }
