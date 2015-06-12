@@ -11,7 +11,6 @@ import com.cngu.androidfun.data.Topic;
 import com.cngu.androidfun.debug.Debug;
 import com.cngu.androidfun.view.TopicView;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 

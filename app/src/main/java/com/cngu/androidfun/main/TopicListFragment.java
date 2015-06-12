@@ -26,8 +26,6 @@ public class TopicListFragment extends BaseFragment implements ITopicListFragmen
     private TopicView.OnClickListener mTopicClickListener;
     private SelectableTopicList mTopicList;
 
-    private Bundle mStateBundle;
-
     /*
      * This factory method is used instead of overloading the default no-arg constructor
      * because when the system needs to recreate this fragment, it will call the default no-arg
@@ -45,8 +43,6 @@ public class TopicListFragment extends BaseFragment implements ITopicListFragmen
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-
-        mStateBundle = savedInstanceState;
 
         RecyclerView topicList = (RecyclerView) inflater.inflate(
                 R.layout.fragment_topic_list, container, false);

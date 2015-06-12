@@ -103,7 +103,7 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.View
         notifyItemChanged(currentSelection);
     }
 
-    private void setNewSelection(int topicPosition) {
+    private void setNewSelection(int topicPosition, ViewHolder holder) {
         // Clear the current selection
         int currentSelection = mTopicList.getSelected()[0];
         mTopicList.setSelected(currentSelection, false);
@@ -126,7 +126,7 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.View
                     return;
                 }
 
-                setNewSelection(topicPosition);
+                setNewSelection(topicPosition, holder);
 
                 if (topic instanceof ActionTopic)
                 {
@@ -135,13 +135,13 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.View
                 }
                 else if (topic instanceof MenuTopic) {
                     // Wait until selectableItemBackground animation finishes before switching pages
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
+                    //new Handler().postDelayed(new Runnable() {
+                    //    @Override
+                    //    public void run() {
                             mTopicClickListener.onMenuTopicClicked((MenuTopic) topic, holder);
                             notifyItemChanged(topicPosition);
-                        }
-                    }, SELECTION_ANIMATION_DURATION);
+                    //    }
+                    //}, SELECTION_ANIMATION_DURATION);
                 }
 
                 /*
