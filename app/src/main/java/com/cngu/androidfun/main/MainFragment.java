@@ -1,6 +1,7 @@
 package com.cngu.androidfun.main;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
@@ -50,6 +51,8 @@ public class MainFragment extends BaseFragment implements IMainFragment {
     private TabLayout mTopicListPagerTabs;
     private ViewPager mTopicListPager;
 
+    private int mTabTransitionDelay;
+
     /*
      * This factory method is used instead of overloading the default no-arg constructor
      * because when the system needs to recreate this fragment, it will call the default no-arg
@@ -62,6 +65,13 @@ public class MainFragment extends BaseFragment implements IMainFragment {
     }
 
     public MainFragment() {}
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mTabTransitionDelay = activity.getResources()
+                                      .getInteger(android.R.integer.config_shortAnimTime);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -154,20 +164,25 @@ public class MainFragment extends BaseFragment implements IMainFragment {
             case R.id.remove_page:
                 final int removedPageIndex = mTopicListPagerAdapter.getCount() - 1;
 
-                Log.d(TAG, "removedPageIndex: " + removedPageIndex);
-                Log.d(TAG, "Num tabs: " + mTopicListPagerTabs.getTabCount());
                 if (removedPageIndex >= 0) {
                     if (mTopicManager.isActionTopicReached()) {
                         mTopicManager.popTopicFromHistory();
                     }
                     mTopicManager.popTopicFromHistory();
 
-                    // Must refresh the ViewPager BEFORE removing the tab so that the tab
-                    // underline/indicator can be seen animating back to the previous tab.
-                    mTopicListPagerAdapter.goBackOnePage();
+                    mTopicListPagerTabs.getTabAt(removedPageIndex).setText("");
+                    mTopicListPagerTabs.getTabAt(removedPageIndex - 1).select();
 
-                    mTopicListPagerTabs.getTabAt(removedPageIndex-1).select();
-                    mTopicListPagerTabs.removeTabAt(removedPageIndex);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            // Must refresh the ViewPager BEFORE removing the tab so that the tab
+                            // underline/indicator can be seen animating back to the previous tab.
+                            mTopicListPagerAdapter.goBackOnePage();
+
+                            mTopicListPagerTabs.removeTabAt(removedPageIndex);
+                        }
+                    }, mTabTransitionDelay);
                 }
 
                 return true;
