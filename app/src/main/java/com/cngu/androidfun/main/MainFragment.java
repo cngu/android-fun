@@ -213,8 +213,8 @@ public class MainFragment extends BaseFragment implements IMainFragment {
     }
 
     @Override
-    public void goBackToPage(int page) {
-        mTopicListPagerAdapter.goBackToPage(page);
+    public void goBackToPage(int page, boolean clearSelection) {
+        mTopicListPagerAdapter.goBackToPage(page, clearSelection);
 
         for (int i = mTopicListPagerTabs.getTabCount()-1; i > page; i--) {
             mTopicListPagerTabs.removeTabAt(i);

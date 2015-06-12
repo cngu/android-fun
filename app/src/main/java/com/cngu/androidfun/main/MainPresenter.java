@@ -45,7 +45,7 @@ public class MainPresenter implements IMainPresenter {
                 mTopicManager.popTopicFromHistory();
             }
 
-            mView.goBackToPage(currentPage);
+            mView.goBackToPage(currentPage, false);
         }
 
         mTopicManager.pushTopicToHistory(topic);

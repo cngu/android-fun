@@ -11,7 +11,7 @@ public interface IMainFragment extends IBaseFragment {
 
     void goToNextPage();
 
-    void goBackToPage(int page);
+    void goBackToPage(int page, boolean clearSelection);
 
     int getPageCount();
 

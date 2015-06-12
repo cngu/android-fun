@@ -88,8 +88,8 @@ public class TopicListFragment extends BaseFragment implements ITopicListFragmen
     }
 
     @Override
-    public void setSelected(int selectedIndex) {
-        mTopicList.setSelected(selectedIndex, true);
+    public void clearSelection() {
+        mTopicListAdapter.clearSelection();
     }
 
     @Override
