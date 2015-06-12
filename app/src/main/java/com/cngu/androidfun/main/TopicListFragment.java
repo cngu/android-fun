@@ -51,14 +51,9 @@ public class TopicListFragment extends BaseFragment implements ITopicListFragmen
         RecyclerView topicList = (RecyclerView) inflater.inflate(
                 R.layout.fragment_topic_list, container, false);
 
-        // Disable animations if we're on LOLLIPOP or higher because we'll supply our own animations.
-        //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        //    topicList.setItemAnimator(null);
-        //}
-
         Context context = topicList.getContext();
 
-        mTopicListAdapter = new TopicListAdapter(topicList);
+        mTopicListAdapter = new TopicListAdapter(context);
 
         // On first creation, no ViewPager pages are created yet, so its adapter's getItem() is
         // called to create the page for the first time. The adapter overrides instantiateItem()
@@ -99,30 +94,30 @@ public class TopicListFragment extends BaseFragment implements ITopicListFragmen
 
     @Override
     public void setTopicList(SelectableTopicList topicList) {
-        if (Debug.isInDebugMode(DEBUG)) {
-            Log.d(TAG, "setTopicList");
-        }
-
         mTopicList = topicList;
 
         // If this fragment is being recreated by the ViewPager, then we're now registering a click
         // listener after the RecyclerView adapter has already been created in onCreateView.
         if (mTopicListAdapter != null) {
+            if (Debug.isInDebugMode(DEBUG)) {
+                Log.d(TAG, "setTopicList - onCreateView not called yet");
+            }
+
             mTopicListAdapter.setTopicList(mTopicList);
         }
     }
 
     @Override
     public void setTopicClickListener(TopicView.OnClickListener listener) {
-        if (Debug.isInDebugMode(DEBUG)) {
-            Log.d(TAG, "setTopicClickListener");
-        }
-
         mTopicClickListener = listener;
 
         // If this fragment is being recreated by the ViewPager, then we're now registering a click
         // listener after the RecyclerView adapter has already been created in onCreateView.
         if (mTopicListAdapter != null) {
+            if (Debug.isInDebugMode(DEBUG)) {
+                Log.d(TAG, "setTopicClickListener - onCreateView not called yet");
+            }
+
             mTopicListAdapter.setTopicClickListener(mTopicClickListener);
         }
     }

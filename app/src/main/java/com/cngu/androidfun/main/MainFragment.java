@@ -64,6 +64,12 @@ public class MainFragment extends BaseFragment implements IMainFragment {
     public MainFragment() {}
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -209,6 +215,10 @@ public class MainFragment extends BaseFragment implements IMainFragment {
     @Override
     public void goBackToPage(int page) {
         mTopicListPagerAdapter.goBackToPage(page);
+
+        for (int i = mTopicListPagerTabs.getTabCount()-1; i > page; i--) {
+            mTopicListPagerTabs.removeTabAt(i);
+        }
     }
 
     @Override

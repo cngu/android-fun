@@ -11,6 +11,7 @@ import com.cngu.androidfun.data.Topic;
 import com.cngu.androidfun.debug.Debug;
 import com.cngu.androidfun.view.TopicView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,16 +20,25 @@ import java.util.List;
 public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
     private static final String TAG = TopicListPagerAdapter.class.getSimpleName();
 
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
+
+    private List<ITopicListFragment> mPages;
 
     private ITopicManager mTopicManager;
-
     private TopicView.OnClickListener mTopicClickListener;
-    private int mPageCount;
 
     public TopicListPagerAdapter(FragmentManager fm) {
         super(fm);
-        mPageCount = 0;
+        mPages = new ArrayList<>();
+    }
+
+    @Override
+    public Fragment getItem(int position) {
+        if (Debug.isInDebugMode(DEBUG)) {
+            Log.d(TAG, "getItem(" + position + ")");
+        }
+
+        return mPages.get(position).asFragment();
     }
 
     @Override
@@ -39,35 +49,12 @@ public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
             Log.d(TAG, "instantiateItem(ViewGroup, " + position + ")");
         }
 
-        MenuTopic topicInHistory = (MenuTopic) mTopicManager.getTopicInHistory(position);
-        Topic selectedTopic = mTopicManager.getTopicInHistory(position+1);
-
-        List<Topic> topicList = topicInHistory.getSubtopics();
-        IListSelector listSelector = new SingleListSelector();
-        SelectableTopicList selectableTopicList = new SelectableTopicList(topicList, listSelector);
-
-        item.setTopicList(selectableTopicList);
-        item.setTopicClickListener(mTopicClickListener);
-
-        if (selectedTopic != null) {
-            item.setSelected(topicInHistory.getIndexOfSubtopic(selectedTopic));
-        }
-
         return item;
     }
 
     @Override
-    public Fragment getItem(int position) {
-        if (Debug.isInDebugMode(DEBUG)) {
-            Log.d(TAG, "getItem(" + position + ")");
-        }
-
-        return TopicListFragment.newInstance().asFragment();
-    }
-
-    @Override
     public int getCount() {
-        return mPageCount;
+        return mPages.size();
     }
 
     @Override
@@ -77,7 +64,8 @@ public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getItemPosition(Object object) {
-        return POSITION_NONE;
+        return POSITION_UNCHANGED;
+        //return POSITION_NONE;
     }
 
     public void addNewPage() {
@@ -85,7 +73,28 @@ public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
     }
 
     public void addNewPages(int numPages) {
-        mPageCount += numPages;
+        while (numPages-- > 0) {
+            ITopicListFragment item = TopicListFragment.newInstance();
+
+            int newPageIndex = mPages.size();
+            MenuTopic topicInHistory = (MenuTopic) mTopicManager.getTopicInHistory(newPageIndex);
+            Topic nextTopicInHistory  = mTopicManager.getTopicInHistory(newPageIndex+1);
+
+            List<Topic> topicList = topicInHistory.getSubtopics();
+            IListSelector listSelector = new SingleListSelector();
+            SelectableTopicList selectableTopicList = new SelectableTopicList(topicList, listSelector);
+
+            if (nextTopicInHistory != null) {
+                int indexOfNextTopic = topicInHistory.getIndexOfSubtopic(nextTopicInHistory);
+                selectableTopicList.setSelected(indexOfNextTopic, true);
+            }
+
+            item.setTopicList(selectableTopicList);
+            item.setTopicClickListener(mTopicClickListener);
+
+            mPages.add(item);
+        }
+
         notifyDataSetChanged();
     }
 
@@ -93,11 +102,11 @@ public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
      * Removes the last page and immediately notifies the ViewPager.
      */
     public void goBackOnePage() {
-        if (mPageCount == 0) {
+        if (mPages.isEmpty()) {
             return;
         }
 
-        mPageCount--;
+        mPages.remove(mPages.size()-1);
         notifyDataSetChanged();
     }
 
@@ -107,11 +116,15 @@ public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
      * @param pageIndex 0-based index of the page to go back to.
      */
     public void goBackToPage(int pageIndex) {
-        if (pageIndex < 0 || pageIndex >= mPageCount-1) {
+        if (pageIndex < 0 || pageIndex >= mPages.size()-1) {
             return;
         }
 
-        mPageCount = pageIndex + 1;
+        int pagesToRemove = mPages.size() - (pageIndex + 1);
+        while (pagesToRemove-- > 0) {
+            mPages.remove(mPages.size()-1);
+        }
+
         notifyDataSetChanged();
     }
 

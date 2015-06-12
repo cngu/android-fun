@@ -33,7 +33,20 @@ public class MainPresenter implements IMainPresenter {
 
     @Override
     public void onMenuTopicClicked(MenuTopic topic, TopicListAdapter.ViewHolder viewHolder) {
-        Log.d(TAG, String.format("Menu Topic on page %d at index %d was clicked!", mView.getCurrentPage(), viewHolder.getAdapterPosition()));
+        int currentPage = mView.getCurrentPage();
+        int lastPage = mView.getPageCount()-1;
+
+        Log.d(TAG, "Current page: " + currentPage);
+        Log.d(TAG, "Last page: " + lastPage);
+
+        if (currentPage < lastPage) {
+            int numTopicsInHistoryToRemove = mTopicManager.getHistorySize() - currentPage - 1;
+            while (numTopicsInHistoryToRemove-- > 0) {
+                mTopicManager.popTopicFromHistory();
+            }
+
+            mView.goBackToPage(currentPage);
+        }
 
         mTopicManager.pushTopicToHistory(topic);
         mView.addNewPage();

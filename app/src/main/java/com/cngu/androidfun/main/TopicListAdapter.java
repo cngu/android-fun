@@ -1,10 +1,9 @@
 package com.cngu.androidfun.main;
 
 import android.animation.Animator;
-import android.os.Build;
+import android.content.Context;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
@@ -19,16 +18,16 @@ import com.cngu.androidfun.view.TopicView;
 
 public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.ViewHolder> {
 
-    private static final long SELECTION_ANIMATION_DURATION = 350L;
+    private final int SELECTION_ANIMATION_DURATION;
 
     private SelectableTopicList mTopicList;
     private TopicView.OnClickListener mTopicClickListener;
 
     private Animator mSelectionAnimator;
-    private long mItemChangeAnimDuration;
 
-    public TopicListAdapter(RecyclerView recyclerView) {
-        mItemChangeAnimDuration = recyclerView.getItemAnimator().getChangeDuration();
+    public TopicListAdapter(Context context) {
+        SELECTION_ANIMATION_DURATION = context.getResources()
+                                              .getInteger(android.R.integer.config_shortAnimTime);
     }
 
     public void setTopicList(SelectableTopicList topicList) {
@@ -108,14 +107,6 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.View
         mTopicList.setSelected(topicPosition, true);
     }
 
-    private void notifyClickListener(Topic topic, ViewHolder holder) {
-        if (topic instanceof ActionTopic) {
-            mTopicClickListener.onActionTopicClicked((ActionTopic) topic, holder);
-        } else if (topic instanceof MenuTopic) {
-            mTopicClickListener.onMenuTopicClicked((MenuTopic) topic, holder);
-        }
-    }
-
     private void attachEventListener(final ViewHolder holder) {
         final TopicView topicView = (TopicView) holder.itemView;
         final View backgroundView = holder.selectedBackgroundView;
@@ -130,6 +121,25 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.View
                     return;
                 }
 
+                setNewSelection(topicPosition);
+
+                if (topic instanceof ActionTopic)
+                {
+                    mTopicClickListener.onActionTopicClicked((ActionTopic) topic, holder);
+                    notifyItemChanged(topicPosition);
+                }
+                else if (topic instanceof MenuTopic) {
+                    // Wait until selectableItemBackground animation finishes before switching pages
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mTopicClickListener.onMenuTopicClicked((MenuTopic) topic, holder);
+                            notifyItemChanged(topicPosition);
+                        }
+                    }, SELECTION_ANIMATION_DURATION);
+                }
+
+                /*
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                 {
                     setNewSelection(topicPosition);
@@ -155,7 +165,7 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.View
                     mSelectionAnimator = ViewAnimationUtils.createCircularReveal(
                             backgroundView, upX, upY, 0, radius);
 
-                    mSelectionAnimator.setDuration(SELECTION_ANIMATION_DURATION);
+                    mSelectionAnimator.setDuration(mItemChangeAnimDuration);
                     mSelectionAnimator.addListener(new Animator.AnimatorListener() {
                         @Override
                         public void onAnimationStart(Animator animator) {
@@ -192,6 +202,7 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.View
                         }
                     }, mItemChangeAnimDuration);
                 }
+                */
             }
         });
     }
