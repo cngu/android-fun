@@ -105,6 +105,8 @@ public class MainFragment extends BaseFragment implements IMainFragment {
         mTopicListPager = (ViewPager) view.findViewById(R.id.topic_list_pager);
         mTopicListPagerAdapter = new TopicListPagerAdapter(fragmentManager);
 
+        // TODO: Restore TopicManager state (or before mTopicListPagerAdapter.addNewPages())
+
         // On first creation, MainActivity.onCreate() is always executed and finished before this
         // Fragment is even attached.
         //
@@ -120,8 +122,6 @@ public class MainFragment extends BaseFragment implements IMainFragment {
         mTopicListPagerAdapter.setTopicManager(mTopicManager);
         mTopicListPagerAdapter.setTopicClickListener(mPresenter);
         mTopicListPagerAdapter.addNewPages(numOpenPages);
-
-        // TODO: Restore TopicManager state (or before mTopicListPagerAdapter.addNewPages())
 
         mTopicListPager.setAdapter(mTopicListPagerAdapter);
 
@@ -170,8 +170,10 @@ public class MainFragment extends BaseFragment implements IMainFragment {
                     }
                     mTopicManager.popTopicFromHistory();
 
+                    mTopicListPagerAdapter.getPage(removedPageIndex - 1).clearSelection();
                     mTopicListPagerTabs.getTabAt(removedPageIndex).setText("");
                     mTopicListPagerTabs.getTabAt(removedPageIndex - 1).select();
+
 
                     new Handler().postDelayed(new Runnable() {
                         @Override

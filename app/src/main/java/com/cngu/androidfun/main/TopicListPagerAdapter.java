@@ -11,6 +11,8 @@ import com.cngu.androidfun.data.Topic;
 import com.cngu.androidfun.debug.Debug;
 import com.cngu.androidfun.view.TopicView;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -21,6 +23,7 @@ public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
 
     private static final boolean DEBUG = true;
 
+    private HashMap<Integer, ITopicListFragment> mPageMap;
     private int mPageCount;
     private ITopicManager mTopicManager;
     private TopicView.OnClickListener mTopicClickListener;
@@ -28,6 +31,7 @@ public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
     public TopicListPagerAdapter(FragmentManager fm) {
         super(fm);
         mPageCount = 0;
+        mPageMap = new HashMap<>();
     }
 
     @Override
@@ -42,6 +46,8 @@ public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         ITopicListFragment item = (TopicListFragment) super.instantiateItem(container, position);
+
+        mPageMap.put(position, item);
 
         if (Debug.isInDebugMode(DEBUG)) {
             Log.d(TAG, "instantiateItem(ViewGroup, " + position + ")");
@@ -78,6 +84,10 @@ public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public int getItemPosition(Object object) {
         return POSITION_NONE;
+    }
+
+    public ITopicListFragment getPage(int pageIndex) {
+        return mPageMap.get(pageIndex);
     }
 
     public void addNewPage() {
