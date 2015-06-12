@@ -1,7 +1,5 @@
 package com.cngu.androidfun.main;
 
-import android.util.Log;
-
 import com.cngu.androidfun.data.ActionTopic;
 import com.cngu.androidfun.data.MenuTopic;
 
@@ -23,8 +21,6 @@ public class MainPresenter implements IMainPresenter {
 
     @Override
     public void onActionTopicClicked(ActionTopic topic, TopicListAdapter.ViewHolder viewHolder) {
-        Log.d(TAG, String.format("Action Topic on page %d at index %d was clicked!", mView.getCurrentPage(), viewHolder.getAdapterPosition()));
-
         if (mTopicManager.isActionTopicReached()) {
             mTopicManager.popTopicFromHistory();
         }
@@ -36,13 +32,8 @@ public class MainPresenter implements IMainPresenter {
         int currentPage = mView.getCurrentPage();
         int lastPage = mView.getPageCount()-1;
 
-        Log.d(TAG, "Current page: " + currentPage);
-        Log.d(TAG, "Last page: " + lastPage);
-
         if (currentPage < lastPage) {
             int numTopicsInHistoryToRemove = mTopicManager.getHistorySize() - currentPage - 1;
-            Log.d(TAG, "History size: " + mTopicManager.getHistorySize());
-            Log.d(TAG, "Number of topics to remove: " + numTopicsInHistoryToRemove);
             while (numTopicsInHistoryToRemove-- > 0) {
                 mTopicManager.popTopicFromHistory();
             }
