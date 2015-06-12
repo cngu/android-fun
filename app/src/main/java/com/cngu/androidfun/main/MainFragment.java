@@ -165,15 +165,17 @@ public class MainFragment extends BaseFragment implements IMainFragment {
                 final int removedPageIndex = mTopicListPagerAdapter.getCount() - 1;
 
                 if (removedPageIndex >= 0) {
-                    if (mTopicManager.isActionTopicReached()) {
-                        mTopicManager.popTopicFromHistory();
-                    }
-                    mTopicManager.popTopicFromHistory();
-
                     mTopicListPagerAdapter.getPage(removedPageIndex - 1).clearSelection();
                     mTopicListPagerTabs.getTabAt(removedPageIndex).setText("");
                     mTopicListPagerTabs.getTabAt(removedPageIndex - 1).select();
 
+                    // Only pop the history after the previous tab was selected. This handles cases
+                    // where the right offscreen ViewPager fragments are loaded when the tab is
+                    // selected.
+                    if (mTopicManager.isActionTopicReached()) {
+                        mTopicManager.popTopicFromHistory();
+                    }
+                    mTopicManager.popTopicFromHistory();
 
                     new Handler().postDelayed(new Runnable() {
                         @Override
