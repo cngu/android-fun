@@ -21,7 +21,7 @@ public class MainActivity extends BaseActivity {
 
         // Create helper *Managers
         FragmentManager fragmentManager = getSupportFragmentManager();
-        ITopicManager topicManager = new TopicManager();
+        ITopicManager topicManager = new TopicManager(this);
 
         //
         // Bootstrap Main MVP

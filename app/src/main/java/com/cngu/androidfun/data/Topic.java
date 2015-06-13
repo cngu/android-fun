@@ -16,7 +16,7 @@ import android.os.Parcelable;
  * </ol>
  */
 public abstract class Topic implements Parcelable {
-    private static final String DEFAULT_TITLE = "<No title>";
+    private static final String DEFAULT_TITLE = "";
     private static final String DEFAULT_DESCRIPTION = "";
 
     private String mTitle;

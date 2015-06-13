@@ -38,4 +38,10 @@
 
     </style>
 
+    <!-- Empty Style used for the topic hierarchy defined in ui_topic_hierarchy.xml -->
+    <style name="Empty">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+    </style>
+
 </resources>

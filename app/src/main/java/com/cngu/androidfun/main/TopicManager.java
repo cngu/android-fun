@@ -1,11 +1,14 @@
 package com.cngu.androidfun.main;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 
+import com.cngu.androidfun.R;
 import com.cngu.androidfun.data.ActionTopic;
 import com.cngu.androidfun.data.MenuTopic;
 import com.cngu.androidfun.data.Topic;
-import com.cngu.androidfun.enums.TopicFragmentId;
+import com.cngu.androidfun.view.TopicView;
 
 import java.util.ArrayList;
 
@@ -20,6 +23,7 @@ import java.util.ArrayList;
  * required and can easily be created on demand.
  */
 public class TopicManager implements ITopicManager {
+    private static final String TAG = TopicManager.class.getSimpleName();
 
     private static final String KEY_HISTORY_STACK = "cngu.key.HISTORY_STACK";
 
@@ -27,34 +31,65 @@ public class TopicManager implements ITopicManager {
     public ArrayList<Topic> mHistory;
     private boolean mActionTopicReached;
 
-    public TopicManager() {
+    private Topic generateTopicHierarchy(TopicView root) {
+        if (root == null) {
+            return null;
+        }
+
+        String title = root.getTitle();
+        String description = root.getDescription();
+
+        if (root.getChildCount() > 0)
+        {
+            MenuTopic mt = new MenuTopic(title, description, null);
+
+            for (int i = 0; i < root.getChildCount(); i++) {
+                TopicView child = (TopicView) root.getChildAt(i);
+                mt.addSubtopic(generateTopicHierarchy(child));
+            }
+
+            return mt;
+        }
+        else {
+            ActionTopic at = new ActionTopic(title, description, root.getDemoFragmentId());
+            return at;
+        }
+    }
+
+    public TopicManager(Context context) {
+        LayoutInflater inflater = LayoutInflater.from(context);
+        TopicView rootTopicView = (TopicView) inflater.inflate(R.layout.ui_topic_hierarchy, null);
+
+
         mTopics = new ArrayList<>();
         mHistory = new ArrayList<>();
         mActionTopicReached = false;
 
-        MenuTopic rootMenu = new MenuTopic("MAIN MENU", null);
+        Topic rootMenu = generateTopicHierarchy(rootTopicView); //new MenuTopic("MAIN MENU", null);
 
+        /*
         // Create a static hierarchy of Topics that the user will navigate through.
         for (int i = 0; i < 10; i++) {
             MenuTopic mt = new MenuTopic("Menu Topic", "Menu Topic " + i, null);
             for (int j = 0; j < 5; j++) {
                 MenuTopic mt2 = new MenuTopic("Nested Menu Topic", "Nested Menu Topic " + j, null);
                 for (int k = 0; k < 5; k++) {
-                    mt2.addSubtopic(new ActionTopic("Nested Action Topic", "Nested Action Topic " + j, TopicFragmentId.TEST));
+                    mt2.addSubtopic(new ActionTopic("Nested Action Topic", "Nested Action Topic " + j, R.integer.demo_anim));
                 }
                 mt.addSubtopic(mt2);
             }
             for (int j = 0; j < 5; j++) {
-                mt.addSubtopic(new ActionTopic("Nested Action Topic", "Nested Action Topic " + j, TopicFragmentId.TEST));
+                mt.addSubtopic(new ActionTopic("Nested Action Topic", "Nested Action Topic " + j, R.integer.demo_anim));
             }
             mTopics.add(mt);
             rootMenu.addSubtopic(mt);
         }
         for (int i = 0; i < 10; i++) {
-            ActionTopic at = new ActionTopic("Action Topic", "Action Topic " + i, TopicFragmentId.TEST);
+            ActionTopic at = new ActionTopic("Action Topic", "Action Topic " + i, R.integer.demo_anim);
             mTopics.add(at);
             rootMenu.addSubtopic(at);
         }
+        */
 
         mHistory.add(rootMenu);
     }

@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="TopicView">
+        <!-- Default style (see TopicView.TopicView(Context, AttributeSet)). -->
         <attr name="topicViewStyle" format="reference"/>
+
+        <attr name="topic_title" format="string"/>
+
+        <attr name="topic_description" format="string"/>
+
+        <!-- Id of the fragment that should be launched by an ActionTopic. -->
+        <attr name="demo_frag_id" format="integer"/>
+
+        <!-- Set to true if view_topic should be inflated -->
+        <attr name="inflate_topic_view" format="boolean"/>
     </declare-styleable>
 </resources>

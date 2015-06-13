@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     This layout is used purely to construct the topic menu UI navigation, which is easier and
+     cleaner than doing it programmatically. In order to have these TopicViews serve purely as a XML
+     hierarchy to generate the menu UI, you must set all TopicView's inflate_topic_view attribute
+     to false.
+
+     To declare a MenuTopic, simply declare a TopicView with children.
+
+     To declare an ActionTopic, assign it a demo_frag_id integer attribute, which is defined in
+     id_demo_fragment.xml
+-->
+<com.cngu.androidfun.view.TopicView
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    custom:topic_title="Main Menu"
+    custom:inflate_topic_view="false"
+    style="@style/Empty">
+
+    <!-- Activities -->
+    <com.cngu.androidfun.view.TopicView
+        custom:topic_title="Activity"
+        custom:inflate_topic_view="false"
+        style="@style/Empty">
+    </com.cngu.androidfun.view.TopicView>
+
+    <!-- Animations -->
+    <com.cngu.androidfun.view.TopicView
+        custom:topic_title="Animation"
+        custom:inflate_topic_view="false"
+        style="@style/Empty">
+    </com.cngu.androidfun.view.TopicView>
+
+    <!-- Broadcast Receivers -->
+    <com.cngu.androidfun.view.TopicView
+        custom:topic_title="Broadcast Receiver"
+        custom:inflate_topic_view="false"
+        style="@style/Empty">
+    </com.cngu.androidfun.view.TopicView>
+
+    <!-- Intents -->
+    <com.cngu.androidfun.view.TopicView
+        custom:topic_title="Intent"
+        custom:inflate_topic_view="false"
+        style="@style/Empty">
+    </com.cngu.androidfun.view.TopicView>
+
+    <!-- Notifications -->
+    <com.cngu.androidfun.view.TopicView
+        custom:topic_title="Notification"
+        custom:inflate_topic_view="false"
+        style="@style/Empty">
+    </com.cngu.androidfun.view.TopicView>
+
+    <!-- Services -->
+    <com.cngu.androidfun.view.TopicView
+        custom:topic_title="Service"
+        custom:inflate_topic_view="false"
+        style="@style/Empty">
+
+        <com.cngu.androidfun.view.TopicView
+            custom:topic_title="Bound Service"
+            custom:inflate_topic_view="false"
+            style="@style/Empty">
+            <com.cngu.androidfun.view.TopicView
+                custom:topic_title="Binder Service"
+                custom:inflate_topic_view="false"
+                custom:demo_frag_id="@integer/demo_anim"
+                style="@style/Empty"/>
+            <com.cngu.androidfun.view.TopicView
+                custom:topic_title="Messenger Service"
+                custom:inflate_topic_view="false"
+                custom:demo_frag_id="@integer/demo_anim"
+                style="@style/Empty"/>
+            <com.cngu.androidfun.view.TopicView
+                custom:topic_title="AIDL Service"
+                custom:inflate_topic_view="false"
+                custom:demo_frag_id="@integer/demo_anim"
+                style="@style/Empty"/>
+        </com.cngu.androidfun.view.TopicView>
+
+        <com.cngu.androidfun.view.TopicView
+            custom:topic_title="Started Service"
+            custom:inflate_topic_view="false"
+            style="@style/Empty">
+            <com.cngu.androidfun.view.TopicView
+                custom:topic_title="Service"
+                custom:inflate_topic_view="false"
+                custom:demo_frag_id="@integer/demo_anim"
+                style="@style/Empty"/>
+            <com.cngu.androidfun.view.TopicView
+                custom:topic_title="Intent Service"
+                custom:inflate_topic_view="false"
+                custom:demo_frag_id="@integer/demo_anim"
+                style="@style/Empty"/>
+        </com.cngu.androidfun.view.TopicView>
+
+    </com.cngu.androidfun.view.TopicView>
+
+</com.cngu.androidfun.view.TopicView>

@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.content.Context;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
@@ -74,20 +75,7 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.View
         int topicPosition = holder.getAdapterPosition();
         final Topic topic = mTopicList.get(topicPosition);
 
-        holder.titleTextView.setText(topic.getTitle());
-        holder.descriptionTextView.setText(topic.getDescription());
-
-        if (topic instanceof ActionTopic) {
-            holder.expandIconImageView.setVisibility(View.INVISIBLE);
-        } else if (topic instanceof MenuTopic) {
-            holder.expandIconImageView.setVisibility(View.VISIBLE);
-        }
-
-        if (!mTopicList.isSelected(topicPosition)) {
-            holder.selectedBackgroundView.setVisibility(View.INVISIBLE);
-        } else {
-            holder.selectedBackgroundView.setVisibility(View.VISIBLE);
-        }
+        holder.setTopic(topic, mTopicList.isSelected(topicPosition));
 
         attachEventListener(holder);
     }
@@ -213,17 +201,28 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.View
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView titleTextView;
-        public TextView descriptionTextView;
-        public ImageView expandIconImageView;
-        public View selectedBackgroundView;
+        private TopicView mView;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(TopicView itemView) {
             super(itemView);
-            titleTextView = (TextView) itemView.findViewById(R.id.title);
-            descriptionTextView = (TextView) itemView.findViewById(R.id.description);
-            expandIconImageView = (ImageView) itemView.findViewById(R.id.expand_icon);
-            selectedBackgroundView = itemView.findViewById(R.id.selected_background);
+            mView = itemView;
+        }
+
+        public void setTopic(Topic topic, boolean selected) {
+            mView.setTitle(topic.getTitle());
+            mView.setDescription(topic.getDescription());
+
+            if (topic instanceof ActionTopic) {
+                mView.hideExpandIcon();
+            } else if (topic instanceof MenuTopic) {
+                mView.showExpandIcon();
+            }
+
+            if (!selected) {
+                mView.hideSelectionBackground();
+            } else {
+                mView.showSelectionBackground();
+            }
         }
     }
 }
