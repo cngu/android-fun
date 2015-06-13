@@ -2,6 +2,7 @@ package com.cngu.androidfun.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +13,6 @@ import android.widget.TextView;
 import com.cngu.androidfun.R;
 import com.cngu.androidfun.data.ActionTopic;
 import com.cngu.androidfun.data.MenuTopic;
-import com.cngu.androidfun.data.Topic;
 import com.cngu.androidfun.main.TopicListAdapter;
 
 /**

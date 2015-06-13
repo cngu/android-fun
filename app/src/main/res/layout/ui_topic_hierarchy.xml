@@ -12,7 +12,7 @@
 -->
 <com.cngu.androidfun.view.TopicView
     xmlns:custom="http://schemas.android.com/apk/res-auto"
-    custom:topic_title="Main Menu"
+    custom:topic_title="Main"
     custom:inflate_topic_view="false"
     style="@style/Empty">
 
@@ -64,17 +64,17 @@
             <com.cngu.androidfun.view.TopicView
                 custom:topic_title="Binder Service"
                 custom:inflate_topic_view="false"
-                custom:demo_frag_id="@integer/demo_anim"
+                custom:demo_frag_id="@integer/demo_test"
                 style="@style/Empty"/>
             <com.cngu.androidfun.view.TopicView
                 custom:topic_title="Messenger Service"
                 custom:inflate_topic_view="false"
-                custom:demo_frag_id="@integer/demo_anim"
+                custom:demo_frag_id="@integer/demo_test"
                 style="@style/Empty"/>
             <com.cngu.androidfun.view.TopicView
                 custom:topic_title="AIDL Service"
                 custom:inflate_topic_view="false"
-                custom:demo_frag_id="@integer/demo_anim"
+                custom:demo_frag_id="@integer/demo_test"
                 style="@style/Empty"/>
         </com.cngu.androidfun.view.TopicView>
 
@@ -85,12 +85,12 @@
             <com.cngu.androidfun.view.TopicView
                 custom:topic_title="Service"
                 custom:inflate_topic_view="false"
-                custom:demo_frag_id="@integer/demo_anim"
+                custom:demo_frag_id="@integer/demo_test"
                 style="@style/Empty"/>
             <com.cngu.androidfun.view.TopicView
                 custom:topic_title="Intent Service"
                 custom:inflate_topic_view="false"
-                custom:demo_frag_id="@integer/demo_anim"
+                custom:demo_frag_id="@integer/demo_test"
                 style="@style/Empty"/>
         </com.cngu.androidfun.view.TopicView>
 

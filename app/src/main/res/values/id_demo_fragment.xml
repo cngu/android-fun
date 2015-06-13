@@ -3,6 +3,6 @@
 <!-- This file contains integer ids for every demo fragment that is launched by an ActionTopic.
      They can also be used with TopicView's action XML attribute. -->
 <resources>
-    <integer name="demo_anim">0</integer>
+    <integer name="demo_test">0</integer>
 
 </resources>

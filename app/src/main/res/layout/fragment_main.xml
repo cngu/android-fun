@@ -22,12 +22,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="You are viewing this on a phone in portrait or landscape, or a tablet in portrait." />
-
     <android.support.v4.view.ViewPager
         android:id="@+id/topic_list_pager"
         android:layout_width="match_parent"
