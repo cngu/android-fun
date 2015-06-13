@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.cngu.androidfun.R;
+import com.cngu.androidfun.android.DividerItemDecoration;
 import com.cngu.androidfun.base.BaseFragment;
 import com.cngu.androidfun.debug.Debug;
 import com.cngu.androidfun.view.TopicView;
@@ -48,6 +49,9 @@ public class TopicListFragment extends BaseFragment implements ITopicListFragmen
                 R.layout.fragment_topic_list, container, false);
 
         Context context = topicList.getContext();
+
+        topicList.addItemDecoration(new DividerItemDecoration(context,
+                                                              DividerItemDecoration.VERTICAL_LIST));
 
         mTopicListAdapter = new TopicListAdapter(context);
 

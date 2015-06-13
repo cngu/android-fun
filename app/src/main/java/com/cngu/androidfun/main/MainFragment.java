@@ -43,6 +43,8 @@ public class MainFragment extends BaseFragment implements IMainFragment {
      */
     private static final long SELECT_NEW_TAB_DELAY = 0L;
 
+    private static final int PAGE_MARGIN_PX = 64;
+
     private IMainPresenter mPresenter;
     private ITopicManager mTopicManager;
 
@@ -106,6 +108,8 @@ public class MainFragment extends BaseFragment implements IMainFragment {
         }
 
         mTopicListPager = (ViewPager) view.findViewById(R.id.topic_list_pager);
+        mTopicListPager.setPageMargin(PAGE_MARGIN_PX);
+
         mTopicListPagerAdapter = new TopicListPagerAdapter(fragmentManager);
 
         // On first creation, MainActivity.onCreate() is always executed and finished before this
