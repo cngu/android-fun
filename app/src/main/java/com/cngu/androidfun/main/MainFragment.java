@@ -10,7 +10,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -101,12 +100,13 @@ public class MainFragment extends BaseFragment implements IMainFragment {
             numOpenPages = STARTING_NUMBER_OF_PAGES;
         } else {
             numOpenPages = savedInstanceState.getInt(KEY_NUM_OPEN_PAGES, STARTING_NUMBER_OF_PAGES);
+
+            // Restore the history of topic navigation
+            mTopicManager.loadHistory(savedInstanceState);
         }
 
         mTopicListPager = (ViewPager) view.findViewById(R.id.topic_list_pager);
         mTopicListPagerAdapter = new TopicListPagerAdapter(fragmentManager);
-
-        // TODO: Restore TopicManager state (or before mTopicListPagerAdapter.addNewPages())
 
         // On first creation, MainActivity.onCreate() is always executed and finished before this
         // Fragment is even attached.
@@ -133,12 +133,27 @@ public class MainFragment extends BaseFragment implements IMainFragment {
         return view;
     }
 
+    //region IBackKeyListener
+    @Override
+    public boolean onBackPressed() {
+        int previousTabIndex = mTopicListPager.getCurrentItem()-1;
+        if (previousTabIndex >= 0) {
+            mTopicListPagerTabs.getTabAt(previousTabIndex).select();
+            return true;
+        }
+        return false;
+    }
+    //endregion
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+
+        // Save the current number of open pages
         outState.putInt(KEY_NUM_OPEN_PAGES, mTopicListPagerAdapter.getCount());
 
-        // TODO: Save TopicManager state
+        // Save the history of topic navigation
+        mTopicManager.saveHistory(outState);
     }
 
     @Override
@@ -231,19 +246,7 @@ public class MainFragment extends BaseFragment implements IMainFragment {
     }
 
     @Override
-    public void goToNextPage() {
-        int currentTabIndex = getCurrentPage();
-
-        if (currentTabIndex >= mTopicListPagerTabs.getTabCount() - 1) {
-            return;
-        }
-
-        TabLayout.Tab nextTab = mTopicListPagerTabs.getTabAt(currentTabIndex+1);
-        nextTab.select();
-    }
-
-    @Override
-    public void goBackToPage(int page, boolean clearSelection) {
+    public void reverseNavigationBackToPage(int page, boolean clearSelection) {
         mTopicListPagerAdapter.goBackToPage(page, clearSelection);
 
         for (int i = mTopicListPagerTabs.getTabCount()-1; i > page; i--) {

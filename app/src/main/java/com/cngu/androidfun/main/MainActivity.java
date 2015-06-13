@@ -48,6 +48,24 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    /**
+     * Handling the Back key on the navigation bar happens here. MainFragment is expected to
+     * implement IBackKeyListener and this Activity will forward the event to it.
+     *
+     * <p>This is a simple solution for our scenario, but if there are multiple fragments, consider
+     * sending a local broadcast to all fragments with the following notes in mind:
+     * <p>Implementation Note 1: All fragments not on screen should unregister their broadcast
+     * receiver so only the top most fragment receives it.
+     * <p>Implementation Note 2: You'll have to find another way to determine if the fragment wants
+     * to ignore the back key (in which case you call super.onBackPressed() in the Activity).
+     */
+    @Override
+    public void onBackPressed() {
+        if (!mView.onBackPressed()) {
+            super.onBackPressed();
+        }
+    }
+
     //region ILifecycleLoggable
     @Override
     public boolean onLogLifecycle() {

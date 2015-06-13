@@ -1,7 +1,5 @@
 package com.cngu.androidfun.main;
 
-import android.util.Log;
-
 import com.cngu.androidfun.data.ActionTopic;
 import com.cngu.androidfun.data.MenuTopic;
 import com.cngu.androidfun.data.Topic;
@@ -52,7 +50,7 @@ public class MainPresenter implements IMainPresenter {
             mTopicManager.pushTopicToHistory(topic);
 
             // Refresh ViewPager to go back to the page that contained the clicked topic
-            mView.goBackToPage(currentPage, false);
+            mView.reverseNavigationBackToPage(currentPage, false);
         }
         else
         {

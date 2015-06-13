@@ -21,6 +21,8 @@ import java.util.ArrayList;
  */
 public class TopicManager implements ITopicManager {
 
+    private static final String KEY_HISTORY_STACK = "cngu.key.HISTORY_STACK";
+
     public ArrayList<Topic> mTopics;
     public ArrayList<Topic> mHistory;
     private boolean mActionTopicReached;
@@ -99,12 +101,15 @@ public class TopicManager implements ITopicManager {
 
     @Override
     public void loadHistory(Bundle savedInstanceState) {
+        mHistory = savedInstanceState.getParcelableArrayList(KEY_HISTORY_STACK);
 
+        Topic top = mHistory.get(mHistory.size()-1);
+        mActionTopicReached = (top instanceof ActionTopic);
     }
 
     @Override
     public void saveHistory(Bundle savedInstanceState) {
-
+        savedInstanceState.putParcelableArrayList(KEY_HISTORY_STACK, mHistory);
     }
 
 }
