@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.cngu.androidfun.R;
 import com.cngu.androidfun.data.ActionTopic;
 import com.cngu.androidfun.data.MenuTopic;
+import com.cngu.androidfun.data.Topic;
 import com.cngu.androidfun.main.TopicListAdapter;
 
 /**
@@ -132,5 +133,6 @@ public class TopicView extends FrameLayout {
     public interface OnClickListener {
         void onActionTopicClicked(ActionTopic topic, TopicListAdapter.ViewHolder viewHolder);
         void onMenuTopicClicked(MenuTopic topic, TopicListAdapter.ViewHolder viewHolder);
+        void onSelectedTopicClicked();
     }
 }

@@ -32,6 +32,11 @@ public class MainPresenter implements IMainPresenter {
         mView.addNewPage();
     }
 
+    @Override
+    public void onSelectedTopicClicked() {
+        mView.viewNextPage();
+    }
+
     private void pushTopicToHistory(Topic topic) {
         int currentPage = mView.getCurrentPage();
         int lastPage = mView.getPageCount()-1;

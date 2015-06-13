@@ -11,6 +11,10 @@ public interface IMainFragment extends IBaseFragment, IBackKeyListener {
 
     void reverseNavigationBackToPage(int page, boolean clearSelection);
 
+    boolean viewPreviousPage();
+
+    boolean viewNextPage();
+
     int getPageCount();
 
     int getCurrentPage();

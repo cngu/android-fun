@@ -136,12 +136,7 @@ public class MainFragment extends BaseFragment implements IMainFragment {
     //region IBackKeyListener
     @Override
     public boolean onBackPressed() {
-        int previousTabIndex = mTopicListPager.getCurrentItem()-1;
-        if (previousTabIndex >= 0) {
-            mTopicListPagerTabs.getTabAt(previousTabIndex).select();
-            return true;
-        }
-        return false;
+        return viewPreviousPage();
     }
     //endregion
 
@@ -252,6 +247,26 @@ public class MainFragment extends BaseFragment implements IMainFragment {
         for (int i = mTopicListPagerTabs.getTabCount()-1; i > page; i--) {
             mTopicListPagerTabs.removeTabAt(i);
         }
+    }
+
+    @Override
+    public boolean viewPreviousPage() {
+        int previousTabIndex = mTopicListPager.getCurrentItem()-1;
+        if (previousTabIndex >= 0) {
+            mTopicListPagerTabs.getTabAt(previousTabIndex).select();
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean viewNextPage() {
+        int nextTabIndex = mTopicListPager.getCurrentItem()+1;
+        if (nextTabIndex < mTopicListPagerTabs.getTabCount()) {
+            mTopicListPagerTabs.getTabAt(nextTabIndex).select();
+            return true;
+        }
+        return false;
     }
 
     @Override

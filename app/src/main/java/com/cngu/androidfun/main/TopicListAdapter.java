@@ -111,6 +111,7 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.View
             public void onClick(View view) {
                 // Ignore taps on items that are already selected
                 if (mTopicList.isSelected(topicPosition)) {
+                    mTopicClickListener.onSelectedTopicClicked();
                     return;
                 }
 
