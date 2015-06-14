@@ -1,17 +1,9 @@
 package com.cngu.androidfun.main;
 
-import android.animation.Animator;
-import android.content.Context;
-import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.cngu.androidfun.R;
 import com.cngu.androidfun.data.ActionTopic;
 import com.cngu.androidfun.data.MenuTopic;
 import com.cngu.androidfun.data.Topic;
@@ -19,17 +11,8 @@ import com.cngu.androidfun.view.TopicView;
 
 public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.ViewHolder> {
 
-    private final int SELECTION_ANIMATION_DURATION;
-
     private SelectableTopicList mTopicList;
     private TopicView.OnClickListener mTopicClickListener;
-
-    private Animator mSelectionAnimator;
-
-    public TopicListAdapter(Context context) {
-        SELECTION_ANIMATION_DURATION = context.getResources()
-                                              .getInteger(android.R.integer.config_shortAnimTime);
-    }
 
     public void setTopicList(SelectableTopicList topicList) {
         mTopicList = topicList;
@@ -91,7 +74,7 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.View
         notifyItemChanged(currentSelection);
     }
 
-    private void setNewSelection(int topicPosition, ViewHolder holder) {
+    private void setNewSelection(int topicPosition) {
         // Clear the current selection
         int currentSelection = mTopicList.getSelected()[0];
         mTopicList.setSelected(currentSelection, false);
@@ -115,7 +98,7 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.View
                     return;
                 }
 
-                setNewSelection(topicPosition, holder);
+                setNewSelection(topicPosition);
 
                 if (topic instanceof ActionTopic)
                 {
@@ -123,80 +106,9 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.View
                     notifyItemChanged(topicPosition);
                 }
                 else if (topic instanceof MenuTopic) {
-                    // Wait until selectableItemBackground animation finishes before switching pages
-                    //new Handler().postDelayed(new Runnable() {
-                    //    @Override
-                    //    public void run() {
-                            mTopicClickListener.onMenuTopicClicked((MenuTopic) topic, holder);
-                            notifyItemChanged(topicPosition);
-                    //    }
-                    //}, SELECTION_ANIMATION_DURATION);
-                }
-
-                /*
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                {
-                    setNewSelection(topicPosition);
-
-                    // Stop any existing animation
-                    if (mSelectionAnimator != null) {
-                        mSelectionAnimator.end();
-                        mSelectionAnimator = null;
-                    }
-
-                    int upX = topicView.getUpX();
-                    int upY = topicView.getUpY();
-
-                    // Prepare the animation to show the highlighted selection background
-                    int radius;
-                    int width = backgroundView.getWidth();
-                    int distanceToRight = width - upX;
-                    if (distanceToRight > width/2) {
-                        radius = distanceToRight;
-                    } else {
-                        radius = width - distanceToRight;
-                    }
-                    mSelectionAnimator = ViewAnimationUtils.createCircularReveal(
-                            backgroundView, upX, upY, 0, radius);
-
-                    mSelectionAnimator.setDuration(mItemChangeAnimDuration);
-                    mSelectionAnimator.addListener(new Animator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart(Animator animator) {
-                            backgroundView.setVisibility(View.VISIBLE);
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animator animator) {
-                            // Only process the current animator. If this was called from an old
-                            // Animator that was cancel()'d or end()'d, ignore it.
-                            if (mSelectionAnimator == animator) {
-                                //notifyItemChanged(topicPosition);
-                                notifyClickListener(topic, holder);
-                            }
-                        }
-
-                        @Override public void onAnimationCancel(Animator animator) {}
-                        @Override public void onAnimationRepeat(Animator animator) {}
-                    });
-
-                    // Animate the selection background
-                    mSelectionAnimator.start();
-                }
-                else
-                {
-                    setNewSelection(topicPosition);
+                    mTopicClickListener.onMenuTopicClicked((MenuTopic) topic, holder);
                     notifyItemChanged(topicPosition);
-
-                    // Wait for notifyItemChanged to finish so the user can see the selection animation
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            notifyClickListener(topic, holder);
-                        }
-                    }, mItemChangeAnimDuration);
                 }
-                */
             }
         });
     }

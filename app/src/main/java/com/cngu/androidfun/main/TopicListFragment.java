@@ -53,7 +53,7 @@ public class TopicListFragment extends BaseFragment implements ITopicListFragmen
         topicList.addItemDecoration(new DividerItemDecoration(context,
                                                               DividerItemDecoration.VERTICAL_LIST));
 
-        mTopicListAdapter = new TopicListAdapter(context);
+        mTopicListAdapter = new TopicListAdapter();
 
         // On first creation, no ViewPager pages are created yet, so its adapter's getItem() is
         // called to create the page for the first time. The adapter overrides instantiateItem()
