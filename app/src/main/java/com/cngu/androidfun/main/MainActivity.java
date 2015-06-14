@@ -1,6 +1,7 @@
 package com.cngu.androidfun.main;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 
@@ -8,7 +9,7 @@ import com.cngu.androidfun.R;
 import com.cngu.androidfun.base.BaseActivity;
 
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements IRootView {
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final String FRAGMENT_TAG_MAIN = "cngu.fragment.tag.MAIN";
 
@@ -21,11 +22,6 @@ public class MainActivity extends BaseActivity {
 
         // Create helper *Managers
         FragmentManager fragmentManager = getSupportFragmentManager();
-        ITopicManager topicManager = new TopicManager(this);
-
-        //
-        // Bootstrap Main MVP
-        //
 
         // Get reference to MainFragment if it already exists in FragmentManager; otherwise create it
         mView = (MainFragment) fragmentManager.findFragmentByTag(FRAGMENT_TAG_MAIN);
@@ -36,16 +32,19 @@ public class MainActivity extends BaseActivity {
             Log.i(TAG, "Found existing MainFragment; reusing it now.");
         }
 
-        IMainPresenter presenter = new MainPresenter(mView, topicManager);
-        mView.registerPresenter(presenter);
-
         // We only need to attach the fragment when this Activity is first opened.
         if (savedInstanceState == null) {
             Log.i(TAG, "Attaching MainFragment to container.");
             fragmentManager.beginTransaction()
-                    .add(R.id.content_fragment_container, mView.asFragment(), FRAGMENT_TAG_MAIN)
+                    .replace(R.id.content_fragment_container, mView.asFragment(), FRAGMENT_TAG_MAIN)
                     .commit();
         }
+    }
+
+    public void test(Fragment f) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right).replace(R.id.content_fragment_container, f, FRAGMENT_TAG_MAIN + "_TEST").addToBackStack(FRAGMENT_TAG_MAIN + "_TEST")
+                .commit();
     }
 
     /**
@@ -61,7 +60,12 @@ public class MainActivity extends BaseActivity {
      */
     @Override
     public void onBackPressed() {
-        if (!mView.onBackPressed()) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        if (fragmentManager.findFragmentByTag(FRAGMENT_TAG_MAIN).isVisible()) {
+            if (!mView.onBackPressed()) {
+                super.onBackPressed();
+            }
+        } else {
             super.onBackPressed();
         }
     }

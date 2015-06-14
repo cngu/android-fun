@@ -21,7 +21,7 @@ import com.cngu.androidfun.view.TopicView;
 public class TopicListFragment extends BaseFragment implements ITopicListFragment {
     private static final String TAG = TopicListFragment.class.getSimpleName();
 
-    private static boolean DEBUG = true;
+    private static boolean DEBUG = false;
 
     private TopicListAdapter mTopicListAdapter;
     private TopicView.OnClickListener mTopicClickListener;

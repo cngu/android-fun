@@ -10,14 +10,18 @@ import com.cngu.androidfun.data.Topic;
 public class MainPresenter implements IMainPresenter {
     private static final String TAG = MainPresenter.class.getSimpleName();
 
+    private IRootView mRootView;
     private IMainFragment mView;
     private ITopicManager mTopicManager;
 
-    public MainPresenter(IMainFragment view, ITopicManager topicManager) {
+    public MainPresenter(IRootView rootView, IMainFragment view) {
+        mRootView = rootView;
         mView = view;
-        mTopicManager = topicManager;
+    }
 
-        mView.setTopicManager(mTopicManager);
+    @Override
+    public void setTopicManager(ITopicManager topicManager) {
+        mTopicManager = topicManager;
     }
 
     @Override
@@ -66,4 +70,5 @@ public class MainPresenter implements IMainPresenter {
             mTopicManager.pushTopicToHistory(topic);
         }
     }
+
 }

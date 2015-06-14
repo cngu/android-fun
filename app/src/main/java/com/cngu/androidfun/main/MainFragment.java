@@ -1,7 +1,10 @@
 package com.cngu.androidfun.main;
 
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
 import android.app.Activity;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
@@ -10,12 +13,17 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.TextView;
 
 import com.cngu.androidfun.R;
 import com.cngu.androidfun.base.BaseFragment;
@@ -46,11 +54,16 @@ public class MainFragment extends BaseFragment implements IMainFragment {
     private static final int PAGE_MARGIN_PX = 64;
 
     private IMainPresenter mPresenter;
+
+    private FragmentManager mFragmentManager;
     private ITopicManager mTopicManager;
 
     private TopicListPagerAdapter mTopicListPagerAdapter;
     private TabLayout mTopicListPagerTabs;
     private ViewPager mTopicListPager;
+
+    /* View state */
+    private int mNumOpenPages;
 
     private int mTabTransitionDelay;
     private boolean mDoneRemove = true;
@@ -79,6 +92,23 @@ public class MainFragment extends BaseFragment implements IMainFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        mNumOpenPages = STARTING_NUMBER_OF_PAGES;
+
+        // Initialize helper *Managers
+        mFragmentManager = getChildFragmentManager();
+        mTopicManager = new TopicManager(getActivity());
+
+        mPresenter = new MainPresenter((MainActivity) getActivity(), this);
+        mPresenter.setTopicManager(mTopicManager);
+
+        // Load state
+        if (savedInstanceState != null) {
+            mNumOpenPages = savedInstanceState.getInt(KEY_NUM_OPEN_PAGES, STARTING_NUMBER_OF_PAGES);
+
+            mTopicManager.loadHistory(savedInstanceState);
+            Log.d(TAG, "Topic manager LOAD " + mTopicManager.getHistorySize());
+        }
     }
 
     @Override
@@ -93,41 +123,20 @@ public class MainFragment extends BaseFragment implements IMainFragment {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
 
-        // Initialize helper *Managers
-        FragmentManager fragmentManager = getChildFragmentManager();
+        toolbar.setFitsSystemWindows(true);
 
-        // Load state
-        int numOpenPages;
-        if (savedInstanceState == null) {
-            numOpenPages = STARTING_NUMBER_OF_PAGES;
-        } else {
-            numOpenPages = savedInstanceState.getInt(KEY_NUM_OPEN_PAGES, STARTING_NUMBER_OF_PAGES);
-
-            // Restore the history of topic navigation
-            mTopicManager.loadHistory(savedInstanceState);
-        }
+        // NOTE: A new adapter must be created everytime for new ViewPagers. Not sure why.
+        // Because we create the adapter here in onCreateView, if another fragment is on top and a
+        // orientation change occurs, then onCreateView won't be called so the adapter is null, and
+        // onSaveInstanceState can't save mTopicListPagerAdapter.getCount(). This is why we
+        // introduced the mNumOpenPages variable.
+        mTopicListPagerAdapter = new TopicListPagerAdapter(mFragmentManager);
+        mTopicListPagerAdapter.setTopicManager(mTopicManager);
+        mTopicListPagerAdapter.setTopicClickListener(mPresenter);
+        mTopicListPagerAdapter.setPageCount(mNumOpenPages);
 
         mTopicListPager = (ViewPager) view.findViewById(R.id.topic_list_pager);
         mTopicListPager.setPageMargin(PAGE_MARGIN_PX);
-
-        mTopicListPagerAdapter = new TopicListPagerAdapter(fragmentManager);
-
-        // On first creation, MainActivity.onCreate() is always executed and finished before this
-        // Fragment is even attached.
-        //
-        // On recreation, this fragment's onAttach() and onCreate() happen before
-        // MainActivity.onCreate(), but onCreateView() always happens after.
-        //
-        // Thus, if this fragment is initialized in MainActivity.onCreate(), then everything will be
-        // set by the time it reaches onCreateView().
-        //
-        // NOTE: This behavior only applies to fragments managed by FragmentManager. Fragments in
-        // ViewPagers have their state managed by the ViewPager: see TopicListFragment to see how
-        // that should be handled.
-        mTopicListPagerAdapter.setTopicManager(mTopicManager);
-        mTopicListPagerAdapter.setTopicClickListener(mPresenter);
-        mTopicListPagerAdapter.addNewPages(numOpenPages);
-
         mTopicListPager.setAdapter(mTopicListPagerAdapter);
 
         mTopicListPagerTabs = (TabLayout) view.findViewById(R.id.topic_list_pager_tabs);
@@ -135,6 +144,13 @@ public class MainFragment extends BaseFragment implements IMainFragment {
         mTopicListPagerTabs.setupWithViewPager(mTopicListPager);
 
         return view;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        mNumOpenPages = mTopicListPagerAdapter.getCount();
     }
 
     //region IBackKeyListener
@@ -149,10 +165,12 @@ public class MainFragment extends BaseFragment implements IMainFragment {
         super.onSaveInstanceState(outState);
 
         // Save the current number of open pages
-        outState.putInt(KEY_NUM_OPEN_PAGES, mTopicListPagerAdapter.getCount());
+        outState.putInt(KEY_NUM_OPEN_PAGES, mNumOpenPages);
 
         // Save the history of topic navigation
         mTopicManager.saveHistory(outState);
+
+        Log.d(TAG, "Topic manager SAVE " + mTopicManager.getHistorySize());
     }
 
     @Override
@@ -174,43 +192,10 @@ public class MainFragment extends BaseFragment implements IMainFragment {
             case R.id.action_settings:
                 return true;
             case R.id.add_page:
-                addNewPage();
+                MainActivity a = (MainActivity) getActivity();
+                a.test(new TestFragment());
                 return true;
             case R.id.remove_page:
-                if (!mDoneRemove) {
-                    return true;
-                }
-
-                mDoneRemove = false;
-                final int removedPageIndex = mTopicListPagerAdapter.getCount() - 1;
-
-                if (removedPageIndex >= 0) {
-                    mTopicListPagerAdapter.getPage(removedPageIndex - 1).clearSelection();
-                    mTopicListPagerTabs.getTabAt(removedPageIndex).setText("");
-                    mTopicListPagerTabs.getTabAt(removedPageIndex - 1).select();
-
-                    // Only pop the history after the previous tab was selected. This handles cases
-                    // where the right offscreen ViewPager fragments are loaded when the tab is
-                    // selected.
-                    if (mTopicManager.isActionTopicReached()) {
-                        mTopicManager.popTopicFromHistory();
-                    }
-                    mTopicManager.popTopicFromHistory();
-
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            // Must refresh the ViewPager BEFORE removing the tab so that the tab
-                            // underline/indicator can be seen animating back to the previous tab.
-                            mTopicListPagerAdapter.goBackOnePage();
-
-                            mTopicListPagerTabs.removeTabAt(removedPageIndex);
-
-                            mDoneRemove = true;
-                        }
-                    }, mTabTransitionDelay);
-                }
-
                 return true;
         }
 
@@ -283,21 +268,45 @@ public class MainFragment extends BaseFragment implements IMainFragment {
         return mTopicListPager.getCurrentItem();
     }
 
-    @Override
-    public void registerPresenter(IMainPresenter presenter) {
-        mPresenter = presenter;
-    }
-
-    @Override
-    public void setTopicManager(ITopicManager topicManager) {
-        mTopicManager = topicManager;
-    }
-
     //region ILifecycleLoggable
     @Override
     public boolean onLogLifecycle() {
-        return false;
+        return true;
     }
     //endregion
+
+
+    public static class TestFragment extends BaseFragment {
+
+        public TestFragment() {}
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            super.onCreateView(inflater, container, savedInstanceState);
+
+            TextView tv = new TextView(getActivity());
+            tv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            tv.setGravity(Gravity.CENTER);
+            tv.setTextSize(30);
+            tv.setText("NEW FRAGMENT");
+
+            return tv;
+        }
+
+        @Override
+        public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
+            if (enter) {
+                return AnimationUtils.loadAnimation(getActivity(), android.R.anim.slide_in_left);
+            } else {
+                return AnimationUtils.loadAnimation(getActivity(), android.R.anim.slide_out_right);
+            }
+        }
+
+        @Override
+        public boolean onLogLifecycle() {
+            return false;
+        }
+    }
 }
 

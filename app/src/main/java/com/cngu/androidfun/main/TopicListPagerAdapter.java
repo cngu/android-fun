@@ -11,7 +11,6 @@ import com.cngu.androidfun.data.Topic;
 import com.cngu.androidfun.debug.Debug;
 import com.cngu.androidfun.view.TopicView;
 
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -22,7 +21,6 @@ public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
 
     private static final boolean DEBUG = true;
 
-    private HashMap<Integer, ITopicListFragment> mPageMap;
     private int mPageCount;
     private ITopicManager mTopicManager;
     private TopicView.OnClickListener mTopicClickListener;
@@ -30,7 +28,6 @@ public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
     public TopicListPagerAdapter(FragmentManager fm) {
         super(fm);
         mPageCount = 0;
-        mPageMap = new HashMap<>();
     }
 
     @Override
@@ -45,8 +42,6 @@ public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         ITopicListFragment item = (TopicListFragment) super.instantiateItem(container, position);
-
-        mPageMap.put(position, item);
 
         if (Debug.isInDebugMode(DEBUG)) {
             Log.d(TAG, "instantiateItem(ViewGroup, " + position + ")");
@@ -85,8 +80,8 @@ public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
         return POSITION_NONE;
     }
 
-    public ITopicListFragment getPage(int pageIndex) {
-        return mPageMap.get(pageIndex);
+    public void setPageCount(int pageCount) {
+        mPageCount = pageCount;
     }
 
     public void addNewPage() {
@@ -96,13 +91,6 @@ public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
     public void addNewPages(int numPages) {
         mPageCount += numPages;
         notifyDataSetChanged();
-    }
-
-    /**
-     * Removes the last page and immediately notifies the ViewPager.
-     */
-    public void goBackOnePage() {
-        goBackToPage(mPageCount - 2, true);
     }
 
     /**
