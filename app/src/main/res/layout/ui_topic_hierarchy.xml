@@ -28,6 +28,28 @@
         custom:topic_title="Animation"
         custom:inflate_topic_view="false"
         style="@style/Empty">
+
+        <com.cngu.androidfun.view.TopicView
+            custom:topic_title="AnimationSet"
+            custom:inflate_topic_view="false"
+            custom:demo_frag_id="@integer/demo_test"
+            style="@style/Empty"/>
+        <com.cngu.androidfun.view.TopicView
+            custom:topic_title="Fade"
+            custom:inflate_topic_view="false"
+            custom:demo_frag_id="@integer/demo_test"
+            style="@style/Empty"/>
+        <com.cngu.androidfun.view.TopicView
+            custom:topic_title="Scale"
+            custom:inflate_topic_view="false"
+            custom:demo_frag_id="@integer/demo_test"
+            style="@style/Empty"/>
+        <com.cngu.androidfun.view.TopicView
+            custom:topic_title="Translate"
+            custom:inflate_topic_view="false"
+            custom:demo_frag_id="@integer/demo_test"
+            style="@style/Empty"/>
+
     </com.cngu.androidfun.view.TopicView>
 
     <!-- Broadcast Receivers -->

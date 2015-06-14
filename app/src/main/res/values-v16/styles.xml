@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- View Styles -->
+    <style name="TopicTitle" parent="android:TextAppearance.DeviceDefault.Medium">
+        <item name="android:textColor">@color/blue_grey_900</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+
+    </style>
+
+    <style name="TopicDescription" parent="android:TextAppearance.DeviceDefault.Small">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+</resources>
