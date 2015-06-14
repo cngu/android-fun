@@ -4,6 +4,8 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+    <dimen name="status_bar_height">24dp</dimen>
+
     <dimen name="list_item_horizontal_padding">16dp</dimen>
 
     <dimen name="topic_view_height">64dp</dimen>
