@@ -191,12 +191,6 @@ public class MainFragment extends BaseFragment implements IMainFragment {
         switch (id) {
             case R.id.action_settings:
                 return true;
-            case R.id.add_page:
-                MainActivity a = (MainActivity) getActivity();
-                a.test(new TestFragment());
-                return true;
-            case R.id.remove_page:
-                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -292,15 +286,6 @@ public class MainFragment extends BaseFragment implements IMainFragment {
             tv.setText("NEW FRAGMENT");
 
             return tv;
-        }
-
-        @Override
-        public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
-            if (enter) {
-                return AnimationUtils.loadAnimation(getActivity(), android.R.anim.slide_in_left);
-            } else {
-                return AnimationUtils.loadAnimation(getActivity(), android.R.anim.slide_out_right);
-            }
         }
 
         @Override

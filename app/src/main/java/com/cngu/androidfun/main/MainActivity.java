@@ -1,19 +1,23 @@
 package com.cngu.androidfun.main;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 
 import com.cngu.androidfun.R;
 import com.cngu.androidfun.base.BaseActivity;
+import com.cngu.androidfun.base.IBaseFragment;
+import com.cngu.androidfun.demo.IDemoFragment;
 
 
 public class MainActivity extends BaseActivity implements IRootView {
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final String FRAGMENT_TAG_MAIN = "cngu.fragment.tag.MAIN";
+    private static final String FRAGMENT_TAG_DEMO = "cngu.fragment.tag.DEMO";
 
-    private IMainFragment mView;
+    private FragmentManager mFragmentManager;
+    private IMainFragment mMainView;
+    private IDemoFragment mDemoView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,13 +25,13 @@ public class MainActivity extends BaseActivity implements IRootView {
         setContentView(R.layout.activity_main);
 
         // Create helper *Managers
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        mFragmentManager = getSupportFragmentManager();
 
         // Get reference to MainFragment if it already exists in FragmentManager; otherwise create it
-        mView = (MainFragment) fragmentManager.findFragmentByTag(FRAGMENT_TAG_MAIN);
-        if (mView == null) {
+        mMainView = (MainFragment) mFragmentManager.findFragmentByTag(FRAGMENT_TAG_MAIN);
+        if (mMainView == null) {
             Log.i(TAG, "Couldn't find existing MainFragment; creating new one.");
-            mView = MainFragment.newInstance();
+            mMainView = MainFragment.newInstance();
         } else {
             Log.i(TAG, "Found existing MainFragment; reusing it now.");
         }
@@ -35,16 +39,10 @@ public class MainActivity extends BaseActivity implements IRootView {
         // We only need to attach the fragment when this Activity is first opened.
         if (savedInstanceState == null) {
             Log.i(TAG, "Attaching MainFragment to container.");
-            fragmentManager.beginTransaction()
-                    .replace(R.id.content_fragment_container, mView.asFragment(), FRAGMENT_TAG_MAIN)
+            mFragmentManager.beginTransaction()
+                    .replace(R.id.content_fragment_container, mMainView.asFragment(), FRAGMENT_TAG_MAIN)
                     .commit();
         }
-    }
-
-    public void test(Fragment f) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right).replace(R.id.content_fragment_container, f, FRAGMENT_TAG_MAIN + "_TEST").addToBackStack(FRAGMENT_TAG_MAIN + "_TEST")
-                .commit();
     }
 
     /**
@@ -60,14 +58,23 @@ public class MainActivity extends BaseActivity implements IRootView {
      */
     @Override
     public void onBackPressed() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        if (fragmentManager.findFragmentByTag(FRAGMENT_TAG_MAIN).isVisible()) {
-            if (!mView.onBackPressed()) {
-                super.onBackPressed();
-            }
-        } else {
+        boolean backHandled = false;
+
+        if (isFragmentOnScreen(mMainView)) {
+            backHandled |= mMainView.onBackPressed();
+        }
+
+        if (isFragmentOnScreen(mDemoView)) {
+            backHandled |= mDemoView.onBackPressed();
+        }
+
+        if (!backHandled) {
             super.onBackPressed();
         }
+    }
+
+    private boolean isFragmentOnScreen(IBaseFragment fragment) {
+        return fragment != null && fragment.asFragment().isVisible();
     }
 
     //region ILifecycleLoggable
