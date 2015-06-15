@@ -16,7 +16,7 @@ import com.cngu.androidfun.demo.IDemoFragment;
 public class MainActivity extends BaseActivity implements IRootView {
     public static final int NO_DEMO_FRAGMENT_ID = -1;
 
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final String FRAGMENT_TAG_MAIN = "cngu.fragment.tag.MAIN";
@@ -60,8 +60,6 @@ public class MainActivity extends BaseActivity implements IRootView {
             mDemoFragmentId = savedInstanceState.getInt(KEY_FRAGMENT_DEMO_ID, NO_DEMO_FRAGMENT_ID);
         }
 
-        Log.d(TAG, "onCreate - BEGIN Back stack size: " + mFragmentManager.getBackStackEntryCount());
-
         int topIndex = mFragmentManager.getBackStackEntryCount()-1;
         if (topIndex >= 0) {
             FragmentManager.BackStackEntry top = mFragmentManager.getBackStackEntryAt(topIndex);
@@ -89,8 +87,6 @@ public class MainActivity extends BaseActivity implements IRootView {
                     .replace(R.id.content_fragment_container, mMainView.asFragment(), FRAGMENT_TAG_MAIN)
                     .commit();
         }
-
-        Log.d(TAG, "onCreate - END Back stack size: " + mFragmentManager.getBackStackEntryCount());
     }
 
     @Override
@@ -114,16 +110,18 @@ public class MainActivity extends BaseActivity implements IRootView {
     public void onBackPressed() {
         boolean backHandled = false;
 
-        Log.d(TAG, "onBackPressed - BEGIN Back stack size: " + mFragmentManager.getBackStackEntryCount());
-
         if (isFragmentOnScreen(mMainView)) {
-            Log.d(TAG, "Letting MainFragment handle back.");
+            if (Debug.isInDebugMode(DEBUG)) {
+                Log.d(TAG, "Letting MainFragment handle back.");
+            }
 
             backHandled |= mMainView.onBackPressed();
         }
 
         if (isFragmentOnScreen(mDemoView)) {
-            Log.d(TAG, "Letting DemoFragment handle back.");
+            if (Debug.isInDebugMode(DEBUG)) {
+                Log.d(TAG, "Letting DemoFragment handle back.");
+            }
 
             boolean demoViewHandledBack = mDemoView.onBackPressed();
             backHandled |= demoViewHandledBack;
@@ -147,10 +145,11 @@ public class MainActivity extends BaseActivity implements IRootView {
             }
         }
 
-        Log.d(TAG, "onBackPressed - AFTER Back stack size: " + mFragmentManager.getBackStackEntryCount());
-
         if (!backHandled) {
-            Log.d(TAG, "Neither MainFragment nor DemoFragment handled back.");
+            if (Debug.isInDebugMode(DEBUG)) {
+                Log.d(TAG, "Neither MainFragment nor DemoFragment handled back.");
+            }
+
             super.onBackPressed();
         }
     }

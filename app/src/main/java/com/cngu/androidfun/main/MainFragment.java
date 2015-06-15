@@ -34,7 +34,7 @@ import com.cngu.androidfun.demo.IDemoFragment;
  * View {@link Fragment} that is intended to be attached to {@link MainActivity}.
  */
 public class MainFragment extends BaseFragment implements IMainFragment {
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
 
     private static final String KEY_NUM_OPEN_PAGES = "cngu.key.NUM_OPEN_PAGES";
     private static final String KEY_FRAGMENT_DEMO_ID = "cngu.key.FRAGMENT_DEMO_ID";
@@ -213,7 +213,6 @@ public class MainFragment extends BaseFragment implements IMainFragment {
 
         if (mDemoFragmentId == MainActivity.NO_DEMO_FRAGMENT_ID) {
             mTopicManager.popTopicFromHistory();
-            Log.d(TAG, "MAIN FRAGMENT POPPING. NEW SIZE: " + mTopicManager.getHistorySize());
         }
 
         showDemoFragment(mDemoFragmentId, mDualPane);
@@ -314,6 +313,7 @@ public class MainFragment extends BaseFragment implements IMainFragment {
         }
     }
 
+    // TODO: This class is for testing purposes only! Replace it with real demo fragments later.
     public static class TestFragment extends DemoFragment {
 
         private String mName;

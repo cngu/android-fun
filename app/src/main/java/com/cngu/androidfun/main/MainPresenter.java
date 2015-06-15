@@ -14,7 +14,7 @@ import com.cngu.androidfun.debug.Debug;
 public class MainPresenter implements IMainPresenter {
     private static final String TAG = MainPresenter.class.getSimpleName();
 
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
 
     private static final int CLICK_DELAY = 125;
 
