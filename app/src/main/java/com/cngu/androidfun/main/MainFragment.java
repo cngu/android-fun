@@ -22,6 +22,7 @@ import com.cngu.androidfun.R;
 import com.cngu.androidfun.base.BaseFragment;
 import com.cngu.androidfun.debug.Debug;
 import com.cngu.androidfun.demo.DemoFragment;
+import com.cngu.androidfun.demo.DemoFragmentFactory;
 import com.cngu.androidfun.demo.IDemoFragment;
 
 
@@ -56,6 +57,7 @@ public class MainFragment extends BaseFragment implements IMainFragment {
 
     private FragmentManager mFragmentManager;
     private ITopicManager mTopicManager;
+    private DemoFragmentFactory mDemoFragmentFactory;
 
     private TopicListPagerAdapter mTopicListPagerAdapter;
     private TabLayout mTopicListPagerTabs;
@@ -93,6 +95,7 @@ public class MainFragment extends BaseFragment implements IMainFragment {
         // Initialize helper *Managers
         mFragmentManager = getChildFragmentManager();
         mTopicManager = new TopicManager(getActivity());
+        mDemoFragmentFactory = new DemoFragmentFactory();
 
         mPresenter = new MainPresenter((MainActivity) getActivity(), this);
         mPresenter.setTopicManager(mTopicManager);
@@ -300,7 +303,7 @@ public class MainFragment extends BaseFragment implements IMainFragment {
                 Log.d(TAG, "Showing demo fragment");
             }
 
-            IDemoFragment demoFragment = TestFragment.newInstance("" + demoFragmentId);
+            IDemoFragment demoFragment = mDemoFragmentFactory.createDemoFragment(demoFragmentId);
             mFragmentManager.beginTransaction()
                     .replace(R.id.right_pane, demoFragment.asFragment(), FRAGMENT_TAG_DEMO)
                     .commit();

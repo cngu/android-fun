@@ -9,6 +9,7 @@ import com.cngu.androidfun.R;
 import com.cngu.androidfun.base.BaseActivity;
 import com.cngu.androidfun.base.IBaseFragment;
 import com.cngu.androidfun.debug.Debug;
+import com.cngu.androidfun.demo.DemoFragmentFactory;
 import com.cngu.androidfun.demo.IDemoFragment;
 
 
@@ -23,6 +24,8 @@ public class MainActivity extends BaseActivity implements IRootView {
     private static final String KEY_FRAGMENT_DEMO_ID = "cngu.key.FRAGMENT_DEMO_ID";
 
     private FragmentManager mFragmentManager;
+    private DemoFragmentFactory mDemoFragmentFactory;
+
     private IMainFragment mMainView;
     private IDemoFragment mDemoView;
 
@@ -38,6 +41,7 @@ public class MainActivity extends BaseActivity implements IRootView {
 
         // Create helper *Managers
         mFragmentManager = getSupportFragmentManager();
+        mDemoFragmentFactory = new DemoFragmentFactory();
 
         mDualPane = getResources().getBoolean(R.bool.dual_pane);
 
@@ -80,13 +84,11 @@ public class MainActivity extends BaseActivity implements IRootView {
         if (mDemoFragmentId != NO_DEMO_FRAGMENT_ID && !mDualPane) {
             Log.i(TAG, "Attaching DemoFragment to container.");
 
-            mDemoView = MainFragment.TestFragment.newInstance("" + mDemoFragmentId);
-            //if (!isFragmentOnScreen(mDemoView)) {
+            mDemoView = mDemoFragmentFactory.createDemoFragment(mDemoFragmentId);
             mFragmentManager.beginTransaction()
                     .replace(R.id.content_fragment_container, mDemoView.asFragment(), FRAGMENT_TAG_DEMO)
                     .addToBackStack(FRAGMENT_TAG_DEMO)
                     .commit();
-            //}
         }
         else {
             Log.i(TAG, "Attaching MainFragment to container.");
@@ -169,7 +171,7 @@ public class MainActivity extends BaseActivity implements IRootView {
                 Log.d(TAG, "Showing new DemoFragment");
             }
 
-            mDemoView = MainFragment.TestFragment.newInstance(mDemoFragmentId+"");
+            mDemoView = mDemoFragmentFactory.createDemoFragment(mDemoFragmentId);
             mFragmentManager.beginTransaction()
                     .replace(R.id.content_fragment_container, mDemoView.asFragment(), FRAGMENT_TAG_DEMO)
                     .addToBackStack(FRAGMENT_TAG_DEMO)

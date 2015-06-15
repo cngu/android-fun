@@ -3,6 +3,17 @@
 <!-- This file contains integer ids for every demo fragment that is launched by an ActionTopic.
      They can also be used with TopicView's action XML attribute. -->
 <resources>
-    <integer name="demo_test">0</integer>
-
+    <integer name="demo_test_0">0</integer>
+    <integer name="demo_test_1">1</integer>
+    <integer name="demo_test_2">2</integer>
+    <integer name="demo_test_3">3</integer>
+    <integer name="demo_test_4">4</integer>
+    <integer name="demo_test_5">5</integer>
+    <integer name="demo_test_6">6</integer>
+    <integer name="demo_test_7">7</integer>
+    <integer name="demo_test_8">8</integer>
+    <integer name="demo_test_9">9</integer>
+    <integer name="demo_test_10">10</integer>
+    <integer name="demo_test_11">11</integer>
+    <integer name="demo_test_12">12</integer>
 </resources>
