@@ -6,9 +6,14 @@ A sample project to demonstrate various Android features and APIs.
 * 
 
 ##Device Support
-Only devices running Android 4.0 (API level 14+) are supported. 
+Only phones and tablets running Android 4.0 (API level 14+) are supported. 
 
-> NOTE: Because appcompat-v7 is utilized, this app should work for all devices using API level 7+. However, this has not been tested.
+> NOTE: Because various v7 support libraries (i.e. appcompat-v7, recyclerview-v7, cardview-v7) are utilized, this app should work for all devices using API level 7+. However, this has not been tested.
+
+###Tested Devices
+* Galaxy Nexus
+* Nexus 5
+* Nexus 7
 
 ##Implementation Notes
 To add new a new demo topic:
