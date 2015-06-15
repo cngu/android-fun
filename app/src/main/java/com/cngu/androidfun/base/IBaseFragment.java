@@ -1,5 +1,6 @@
 package com.cngu.androidfun.base;
 
+
 import android.support.v4.app.Fragment;
 
 /**

@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- This SHOULD use android:fitsSystemWindows="true" instead of manual padding, but the effect
+         of this flag seems to be ignored or lost when going through a fragment transaction. -->
     <android.support.v7.widget.Toolbar
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/toolbar"
+        android:paddingTop="@dimen/status_bar_height"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="?attr/actionBarSize"

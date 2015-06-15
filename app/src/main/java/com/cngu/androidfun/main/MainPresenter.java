@@ -1,5 +1,6 @@
 package com.cngu.androidfun.main;
 
+import android.os.Handler;
 import android.util.Log;
 
 import com.cngu.androidfun.data.ActionTopic;
@@ -12,7 +13,10 @@ import com.cngu.androidfun.debug.Debug;
  */
 public class MainPresenter implements IMainPresenter {
     private static final String TAG = MainPresenter.class.getSimpleName();
+
     private static final boolean DEBUG = true;
+
+    private static final int CLICK_DELAY = 125;
 
     private IRootView mRootView;
     private IMainFragment mView;
@@ -40,13 +44,20 @@ public class MainPresenter implements IMainPresenter {
 
         pushTopicToHistory(topic);
 
-        int demoFragmentId = topic.getDemoFragmentId();
+        final int demoFragmentId = topic.getDemoFragmentId();
 
         if (Debug.isInDebugMode(DEBUG)) {
             Log.d(TAG, "Showing demo fragment with id " + demoFragmentId);
         }
 
-        mRootView.setDemoFragmentId(demoFragmentId);
+        // Delay showing the new fragment to see the click animation on the TopicView
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mRootView.setDemoFragmentId(demoFragmentId);
+            }
+        }, CLICK_DELAY);
+
         mView.setDemoFragmentId(demoFragmentId);
     }
 

@@ -1,5 +1,7 @@
 package com.cngu.androidfun.main;
 
+import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
@@ -16,6 +18,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cngu.androidfun.R;
@@ -331,8 +335,6 @@ public class MainFragment extends BaseFragment implements IMainFragment {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-
-
         }
 
         @Override
@@ -347,13 +349,20 @@ public class MainFragment extends BaseFragment implements IMainFragment {
                 mName = args.getString("NAME");
             }
 
-            TextView tv = new TextView(getActivity());
-            tv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-            tv.setGravity(Gravity.CENTER);
-            tv.setTextSize(30);
-            tv.setText("NEW FRAGMENT - " + mName);
+            Context context = getActivity();
 
-            return tv;
+            TextView tv = new TextView(context);
+            tv.setTextSize(30);
+            tv.setText("DEMO FRAGMENT - " + mName);
+
+            RelativeLayout rl = new RelativeLayout(context);
+            rl.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            rl.addView(tv);
+
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) tv.getLayoutParams();
+            lp.addRule(RelativeLayout.CENTER_IN_PARENT);
+
+            return rl;
         }
 
         @Override

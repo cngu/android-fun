@@ -60,13 +60,6 @@ public class MainActivity extends BaseActivity implements IRootView {
             mDemoFragmentId = savedInstanceState.getInt(KEY_FRAGMENT_DEMO_ID, NO_DEMO_FRAGMENT_ID);
         }
 
-        /*
-        No demo fragment id, not dual pane    - Show Main
-        no demo fragment id, dual pane        - Show Main
-        Demo frag id, not dual pane           - Show Demo
-        Demo frag id, dual pane               - Show Main
-         */
-
         Log.d(TAG, "onCreate - BEGIN Back stack size: " + mFragmentManager.getBackStackEntryCount());
 
         int topIndex = mFragmentManager.getBackStackEntryCount()-1;
@@ -172,7 +165,15 @@ public class MainActivity extends BaseActivity implements IRootView {
             }
 
             mDemoView = mDemoFragmentFactory.createDemoFragment(mDemoFragmentId);
+
+            // BUG NOTE: The views in the leaving fragment (the one being animated/transitioned out)
+            // except the toolbar, all disappear when this transition animation starts.
+            // https://code.google.com/p/android/issues/detail?id=55228
+            // http://stackoverflow.com/questions/14900738/nested-fragments-disappear-during-transition-animation
+            // http://stackoverflow.com/questions/13982240/how-to-animate-fragment-removal
+            // http://stackoverflow.com/questions/5959256/android-whats-wrong-with-my-fragment-transition-animation
             mFragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left, R.anim.slide_in_right, R.anim.slide_out_right)
                     .replace(R.id.content_fragment_container, mDemoView.asFragment(), FRAGMENT_TAG_DEMO)
                     .addToBackStack(FRAGMENT_TAG_DEMO)
                     .commit();
