@@ -2,6 +2,7 @@ package com.cngu.androidfun.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,8 +102,11 @@ public class MenuTopic extends Topic {
     }
 
     public int getIndexOfSubtopic(Topic selectedTopic) {
+        Topic subtopic;
+
         for (int i = 0; i < mSubtopics.size(); i++) {
-            if (selectedTopic == mSubtopics.get(i)) {
+            subtopic = mSubtopics.get(i);
+            if (selectedTopic.equals(subtopic)) {
                 return i;
             }
         }
@@ -112,7 +116,7 @@ public class MenuTopic extends Topic {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(MenuTopic.class.getSimpleName()).append("{")
+        StringBuilder sb = new StringBuilder(MenuTopic.class.getSimpleName()).append(System.identityHashCode(this)).append("{")
                 .append("title=").append("\"").append(getTitle()).append("\"")
                 .append(" description=").append("\"").append(getDescription()).append("\"");
 
@@ -129,6 +133,35 @@ public class MenuTopic extends Topic {
         sb.append("}");
 
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        if (!super.equals(o)) {
+            return false;
+        }
+
+        MenuTopic that = (MenuTopic) o;
+
+        if (mSubtopics != null ? !mSubtopics.equals(that.mSubtopics) : that.mSubtopics != null) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (mSubtopics != null ? mSubtopics.hashCode() : 0);
+        return result;
     }
 
     //region Parcelable

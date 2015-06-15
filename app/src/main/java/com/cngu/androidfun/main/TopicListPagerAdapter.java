@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import com.cngu.androidfun.data.MenuTopic;
 import com.cngu.androidfun.data.Topic;
 import com.cngu.androidfun.debug.Debug;
+import com.cngu.androidfun.utils.IListSelector;
+import com.cngu.androidfun.utils.SingleSelector;
 import com.cngu.androidfun.view.TopicView;
 
 import java.util.List;
@@ -19,7 +21,7 @@ import java.util.List;
 public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
     private static final String TAG = TopicListPagerAdapter.class.getSimpleName();
 
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
 
     private int mPageCount;
     private ITopicManager mTopicManager;
@@ -48,15 +50,24 @@ public class TopicListPagerAdapter extends FragmentStatePagerAdapter {
         }
 
         MenuTopic topicInHistory = (MenuTopic) mTopicManager.getTopicInHistory(position);
-        Topic nextTopicInHistory  = mTopicManager.getTopicInHistory(position+1);
+        Topic nextTopicInHistory  = mTopicManager.getTopicInHistory(position + 1);
 
         List<Topic> topicList = topicInHistory.getSubtopics();
-        IListSelector listSelector = new SingleListSelector();
-        SelectableTopicList selectableTopicList = new SelectableTopicList(topicList, listSelector);
+        IListSelector selector = new SingleSelector();
+        SelectableTopicList selectableTopicList = new SelectableTopicList(topicList, selector);
+
+        if (Debug.isInDebugMode(DEBUG)) {
+            Log.d(TAG, "Topic: " + topicInHistory);
+            Log.d(TAG, "Next: " + nextTopicInHistory);
+        }
 
         if (nextTopicInHistory != null) {
             int indexOfNextTopic = topicInHistory.getIndexOfSubtopic(nextTopicInHistory);
             selectableTopicList.setSelected(indexOfNextTopic, true);
+
+            if (Debug.isInDebugMode(DEBUG)) {
+                Log.d(TAG, "Selected " + indexOfNextTopic);
+            }
         }
 
         item.setTopicList(selectableTopicList);

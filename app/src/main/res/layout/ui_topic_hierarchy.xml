@@ -20,8 +20,8 @@
     <com.cngu.androidfun.view.TopicView
         custom:topic_title="Activity"
         custom:inflate_topic_view="false"
-        style="@style/Empty">
-    </com.cngu.androidfun.view.TopicView>
+        custom:demo_frag_id="0"
+        style="@style/Empty"/>
 
     <!-- Animations -->
     <com.cngu.androidfun.view.TopicView
@@ -32,22 +32,22 @@
         <com.cngu.androidfun.view.TopicView
             custom:topic_title="AnimationSet"
             custom:inflate_topic_view="false"
-            custom:demo_frag_id="@integer/demo_test"
+            custom:demo_frag_id="1"
             style="@style/Empty"/>
         <com.cngu.androidfun.view.TopicView
             custom:topic_title="Fade"
             custom:inflate_topic_view="false"
-            custom:demo_frag_id="@integer/demo_test"
+            custom:demo_frag_id="2"
             style="@style/Empty"/>
         <com.cngu.androidfun.view.TopicView
             custom:topic_title="Scale"
             custom:inflate_topic_view="false"
-            custom:demo_frag_id="@integer/demo_test"
+            custom:demo_frag_id="3"
             style="@style/Empty"/>
         <com.cngu.androidfun.view.TopicView
             custom:topic_title="Translate"
             custom:inflate_topic_view="false"
-            custom:demo_frag_id="@integer/demo_test"
+            custom:demo_frag_id="4"
             style="@style/Empty"/>
 
     </com.cngu.androidfun.view.TopicView>
@@ -56,22 +56,22 @@
     <com.cngu.androidfun.view.TopicView
         custom:topic_title="Broadcast Receiver"
         custom:inflate_topic_view="false"
-        style="@style/Empty">
-    </com.cngu.androidfun.view.TopicView>
+        custom:demo_frag_id="5"
+        style="@style/Empty"/>
 
     <!-- Intents -->
     <com.cngu.androidfun.view.TopicView
         custom:topic_title="Intent"
         custom:inflate_topic_view="false"
-        style="@style/Empty">
-    </com.cngu.androidfun.view.TopicView>
+        custom:demo_frag_id="6"
+        style="@style/Empty"/>
 
     <!-- Notifications -->
     <com.cngu.androidfun.view.TopicView
         custom:topic_title="Notification"
         custom:inflate_topic_view="false"
-        style="@style/Empty">
-    </com.cngu.androidfun.view.TopicView>
+        custom:demo_frag_id="7"
+        style="@style/Empty"/>
 
     <!-- Services -->
     <com.cngu.androidfun.view.TopicView
@@ -86,17 +86,17 @@
             <com.cngu.androidfun.view.TopicView
                 custom:topic_title="Binder Service"
                 custom:inflate_topic_view="false"
-                custom:demo_frag_id="@integer/demo_test"
+                custom:demo_frag_id="8"
                 style="@style/Empty"/>
             <com.cngu.androidfun.view.TopicView
                 custom:topic_title="Messenger Service"
                 custom:inflate_topic_view="false"
-                custom:demo_frag_id="@integer/demo_test"
+                custom:demo_frag_id="9"
                 style="@style/Empty"/>
             <com.cngu.androidfun.view.TopicView
                 custom:topic_title="AIDL Service"
                 custom:inflate_topic_view="false"
-                custom:demo_frag_id="@integer/demo_test"
+                custom:demo_frag_id="10"
                 style="@style/Empty"/>
         </com.cngu.androidfun.view.TopicView>
 
@@ -107,12 +107,12 @@
             <com.cngu.androidfun.view.TopicView
                 custom:topic_title="Service"
                 custom:inflate_topic_view="false"
-                custom:demo_frag_id="@integer/demo_test"
+                custom:demo_frag_id="11"
                 style="@style/Empty"/>
             <com.cngu.androidfun.view.TopicView
                 custom:topic_title="Intent Service"
                 custom:inflate_topic_view="false"
-                custom:demo_frag_id="@integer/demo_test"
+                custom:demo_frag_id="12"
                 style="@style/Empty"/>
         </com.cngu.androidfun.view.TopicView>
 

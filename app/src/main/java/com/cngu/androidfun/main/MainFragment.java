@@ -1,10 +1,5 @@
 package com.cngu.androidfun.main;
 
-
-import android.animation.Animator;
-import android.animation.AnimatorInflater;
-import android.app.Activity;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
@@ -21,20 +16,24 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.cngu.androidfun.R;
 import com.cngu.androidfun.base.BaseFragment;
+import com.cngu.androidfun.debug.Debug;
+import com.cngu.androidfun.demo.DemoFragment;
+import com.cngu.androidfun.demo.IDemoFragment;
 
 
 /**
  * View {@link Fragment} that is intended to be attached to {@link MainActivity}.
  */
 public class MainFragment extends BaseFragment implements IMainFragment {
+    private static final boolean DEBUG = true;
 
     private static final String KEY_NUM_OPEN_PAGES = "cngu.key.NUM_OPEN_PAGES";
+    private static final String KEY_FRAGMENT_DEMO_ID = "cngu.key.FRAGMENT_DEMO_ID";
+    private static final String FRAGMENT_TAG_DEMO = "cngu.fragment.tag.DEMO";
 
     // This should always be 1 because if set higher, we can't predict the path the user navigated
     // through the menus to get to the pages past the first.
@@ -62,11 +61,11 @@ public class MainFragment extends BaseFragment implements IMainFragment {
     private TabLayout mTopicListPagerTabs;
     private ViewPager mTopicListPager;
 
-    /* View state */
-    private int mNumOpenPages;
+    private boolean mDualPane;
 
-    private int mTabTransitionDelay;
-    private boolean mDoneRemove = true;
+    // Saved state
+    private int mNumOpenPages;
+    private int mDemoFragmentId;
 
     /*
      * This factory method is used instead of overloading the default no-arg constructor
@@ -82,18 +81,14 @@ public class MainFragment extends BaseFragment implements IMainFragment {
     public MainFragment() {}
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        mTabTransitionDelay = activity.getResources()
-                                      .getInteger(android.R.integer.config_shortAnimTime);
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
         mNumOpenPages = STARTING_NUMBER_OF_PAGES;
+        mDemoFragmentId = MainActivity.NO_DEMO_FRAGMENT_ID;
+
+        mDualPane = getResources().getBoolean(R.bool.dual_pane);
 
         // Initialize helper *Managers
         mFragmentManager = getChildFragmentManager();
@@ -105,9 +100,9 @@ public class MainFragment extends BaseFragment implements IMainFragment {
         // Load state
         if (savedInstanceState != null) {
             mNumOpenPages = savedInstanceState.getInt(KEY_NUM_OPEN_PAGES, STARTING_NUMBER_OF_PAGES);
-
+            mDemoFragmentId = savedInstanceState.getInt(KEY_FRAGMENT_DEMO_ID,
+                                                        MainActivity.NO_DEMO_FRAGMENT_ID);
             mTopicManager.loadHistory(savedInstanceState);
-            Log.d(TAG, "Topic manager LOAD " + mTopicManager.getHistorySize());
         }
     }
 
@@ -125,7 +120,7 @@ public class MainFragment extends BaseFragment implements IMainFragment {
 
         toolbar.setFitsSystemWindows(true);
 
-        // NOTE: A new adapter must be created everytime for new ViewPagers. Not sure why.
+        // NOTE: A new adapter must be created every time for new ViewPagers. Not sure why.
         // Because we create the adapter here in onCreateView, if another fragment is on top and a
         // orientation change occurs, then onCreateView won't be called so the adapter is null, and
         // onSaveInstanceState can't save mTopicListPagerAdapter.getCount(). This is why we
@@ -143,20 +138,32 @@ public class MainFragment extends BaseFragment implements IMainFragment {
         mTopicListPagerTabs.setTabMode(TabLayout.MODE_SCROLLABLE);
         mTopicListPagerTabs.setupWithViewPager(mTopicListPager);
 
+        // Show demo fragment if necessary
+        if (Debug.isInDebugMode(DEBUG)) {
+            Log.d(TAG, "onCreateView - demo fragment id: " + mDemoFragmentId);
+        }
+        showDemoFragment(mDemoFragmentId, mDualPane);
+
         return view;
     }
 
     @Override
     public void onPause() {
         super.onPause();
-
         mNumOpenPages = mTopicListPagerAdapter.getCount();
     }
 
     //region IBackKeyListener
     @Override
     public boolean onBackPressed() {
-        return viewPreviousPage();
+        if (viewPreviousPage()) {
+            return true;
+        }
+
+        // If we don't handle back, it may be handled by the DemoFragment in single-pane, so we
+        // should clear the demo fragment id in case the DemoFragment closes itself on back.
+        mDemoFragmentId = MainActivity.NO_DEMO_FRAGMENT_ID;
+        return false;
     }
     //endregion
 
@@ -164,13 +171,10 @@ public class MainFragment extends BaseFragment implements IMainFragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        // Save the current number of open pages
         outState.putInt(KEY_NUM_OPEN_PAGES, mNumOpenPages);
+        outState.putInt(KEY_FRAGMENT_DEMO_ID, mDemoFragmentId);
 
-        // Save the history of topic navigation
         mTopicManager.saveHistory(outState);
-
-        Log.d(TAG, "Topic manager SAVE " + mTopicManager.getHistorySize());
     }
 
     @Override
@@ -194,6 +198,18 @@ public class MainFragment extends BaseFragment implements IMainFragment {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void setDemoFragmentId(int demoFragmentId) {
+        mDemoFragmentId = demoFragmentId;
+
+        if (mDemoFragmentId == MainActivity.NO_DEMO_FRAGMENT_ID) {
+            mTopicManager.popTopicFromHistory();
+            Log.d(TAG, "MAIN FRAGMENT POPPING. NEW SIZE: " + mTopicManager.getHistorySize());
+        }
+
+        showDemoFragment(mDemoFragmentId, mDualPane);
     }
 
     @Override
@@ -265,31 +281,85 @@ public class MainFragment extends BaseFragment implements IMainFragment {
     //region ILifecycleLoggable
     @Override
     public boolean onLogLifecycle() {
-        return true;
+        return DEBUG;
     }
     //endregion
 
+    private void showDemoFragment(int demoFragmentId, boolean dualPane) {
+        if (demoFragmentId == MainActivity.NO_DEMO_FRAGMENT_ID) {
+            final Fragment demoFragment = mFragmentManager.findFragmentByTag(FRAGMENT_TAG_DEMO);
+            if (demoFragment != null) {
+                mFragmentManager.beginTransaction().remove(demoFragment).commit();
+            }
 
-    public static class TestFragment extends BaseFragment {
+            return;
+        }
 
-        public TestFragment() {}
+        if (dualPane && demoFragmentId != MainActivity.NO_DEMO_FRAGMENT_ID) {
+            if (Debug.isInDebugMode(DEBUG)) {
+                Log.d(TAG, "Showing demo fragment");
+            }
+
+            IDemoFragment demoFragment = TestFragment.newInstance("" + demoFragmentId);
+            mFragmentManager.beginTransaction()
+                    .replace(R.id.right_pane, demoFragment.asFragment(), FRAGMENT_TAG_DEMO)
+                    .commit();
+        }
+    }
+
+    public static class TestFragment extends DemoFragment {
+
+        private String mName;
+
+        public static TestFragment newInstance(String name) {
+            TestFragment tf = new TestFragment();
+            tf.mName = name;
+
+            Bundle args = new Bundle();
+            args.putString("NAME", name);
+            tf.setArguments(args);
+
+            return tf;
+        }
+
+        public TestFragment() {
+        }
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+
+
+        }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             super.onCreateView(inflater, container, savedInstanceState);
 
+            Bundle args = getArguments();
+            if (args == null) {
+                mName = "NONE";
+            } else {
+                mName = args.getString("NAME");
+            }
+
             TextView tv = new TextView(getActivity());
             tv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             tv.setGravity(Gravity.CENTER);
             tv.setTextSize(30);
-            tv.setText("NEW FRAGMENT");
+            tv.setText("NEW FRAGMENT - " + mName);
 
             return tv;
         }
 
         @Override
         public boolean onLogLifecycle() {
+            return false;
+        }
+
+        @Override
+        public boolean onBackPressed() {
             return false;
         }
     }

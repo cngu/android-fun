@@ -1,14 +1,18 @@
 package com.cngu.androidfun.main;
 
+import android.util.Log;
+
 import com.cngu.androidfun.data.ActionTopic;
 import com.cngu.androidfun.data.MenuTopic;
 import com.cngu.androidfun.data.Topic;
+import com.cngu.androidfun.debug.Debug;
 
 /**
  * Presenter for {@link MainFragment}.
  */
 public class MainPresenter implements IMainPresenter {
     private static final String TAG = MainPresenter.class.getSimpleName();
+    private static final boolean DEBUG = true;
 
     private IRootView mRootView;
     private IMainFragment mView;
@@ -26,19 +30,41 @@ public class MainPresenter implements IMainPresenter {
 
     @Override
     public void onActionTopicClicked(ActionTopic topic, TopicListAdapter.ViewHolder viewHolder) {
+        // Ignore taps on items that are already selected
+        if (mTopicManager.isTopicInHistory(topic)) {
+            if (Debug.isInDebugMode(DEBUG)) {
+                Log.d(TAG, "Ignoring action topic click");
+            }
+            return;
+        }
+
         pushTopicToHistory(topic);
+
+        int demoFragmentId = topic.getDemoFragmentId();
+
+        if (Debug.isInDebugMode(DEBUG)) {
+            Log.d(TAG, "Showing demo fragment with id " + demoFragmentId);
+        }
+
+        mRootView.setDemoFragmentId(demoFragmentId);
+        mView.setDemoFragmentId(demoFragmentId);
     }
 
     @Override
     public void onMenuTopicClicked(MenuTopic topic, TopicListAdapter.ViewHolder viewHolder) {
+        // Ignore taps on items that are already selected
+        if (mTopicManager.isTopicInHistory(topic)) {
+            if (Debug.isInDebugMode(DEBUG)) {
+                Log.d(TAG, "Ignoring menu topic click");
+            }
+
+            mView.viewNextPage();
+            return;
+        }
+
         pushTopicToHistory(topic);
 
         mView.addNewPage();
-    }
-
-    @Override
-    public void onSelectedTopicClicked() {
-        mView.viewNextPage();
     }
 
     private void pushTopicToHistory(Topic topic) {

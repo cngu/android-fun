@@ -1,6 +1,7 @@
 package com.cngu.androidfun.main;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -92,12 +93,6 @@ public class TopicListAdapter extends RecyclerView.Adapter<TopicListAdapter.View
         topicView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Ignore taps on items that are already selected
-                if (mTopicList.isSelected(topicPosition)) {
-                    mTopicClickListener.onSelectedTopicClicked();
-                    return;
-                }
-
                 setNewSelection(topicPosition);
 
                 if (topic instanceof ActionTopic)

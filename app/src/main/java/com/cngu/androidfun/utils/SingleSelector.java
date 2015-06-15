@@ -1,14 +1,16 @@
-package com.cngu.androidfun.main;
+package com.cngu.androidfun.utils;
+
+import com.cngu.androidfun.utils.IListSelector;
 
 /**
  * A strategy for managing a single selection state of general items in a list.
  */
-public class SingleListSelector implements IListSelector {
+public class SingleSelector implements IListSelector {
     private static final int SELECTED_NONE = -1;
 
     private int mSelectedIndex;
 
-    public SingleListSelector() {
+    public SingleSelector() {
         mSelectedIndex = SELECTED_NONE;
     }
 

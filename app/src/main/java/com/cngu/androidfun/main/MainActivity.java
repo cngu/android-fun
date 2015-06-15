@@ -1,23 +1,35 @@
 package com.cngu.androidfun.main;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 
 import com.cngu.androidfun.R;
 import com.cngu.androidfun.base.BaseActivity;
 import com.cngu.androidfun.base.IBaseFragment;
+import com.cngu.androidfun.debug.Debug;
 import com.cngu.androidfun.demo.IDemoFragment;
 
 
 public class MainActivity extends BaseActivity implements IRootView {
+    public static final int NO_DEMO_FRAGMENT_ID = -1;
+
+    private static final boolean DEBUG = true;
+
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final String FRAGMENT_TAG_MAIN = "cngu.fragment.tag.MAIN";
     private static final String FRAGMENT_TAG_DEMO = "cngu.fragment.tag.DEMO";
+    private static final String KEY_FRAGMENT_DEMO_ID = "cngu.key.FRAGMENT_DEMO_ID";
 
     private FragmentManager mFragmentManager;
     private IMainFragment mMainView;
     private IDemoFragment mDemoView;
+
+    private boolean mDualPane;
+
+    // Saved state
+    private int mDemoFragmentId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +38,8 @@ public class MainActivity extends BaseActivity implements IRootView {
 
         // Create helper *Managers
         mFragmentManager = getSupportFragmentManager();
+
+        mDualPane = getResources().getBoolean(R.bool.dual_pane);
 
         // Get reference to MainFragment if it already exists in FragmentManager; otherwise create it
         mMainView = (MainFragment) mFragmentManager.findFragmentByTag(FRAGMENT_TAG_MAIN);
@@ -36,13 +50,58 @@ public class MainActivity extends BaseActivity implements IRootView {
             Log.i(TAG, "Found existing MainFragment; reusing it now.");
         }
 
-        // We only need to attach the fragment when this Activity is first opened.
         if (savedInstanceState == null) {
+            mDemoFragmentId = NO_DEMO_FRAGMENT_ID;
+        } else {
+            mDemoFragmentId = savedInstanceState.getInt(KEY_FRAGMENT_DEMO_ID, NO_DEMO_FRAGMENT_ID);
+        }
+
+        /*
+        No demo fragment id, not dual pane    - Show Main
+        no demo fragment id, dual pane        - Show Main
+        Demo frag id, not dual pane           - Show Demo
+        Demo frag id, dual pane               - Show Main
+         */
+
+        Log.d(TAG, "onCreate - BEGIN Back stack size: " + mFragmentManager.getBackStackEntryCount());
+
+        int topIndex = mFragmentManager.getBackStackEntryCount()-1;
+        if (topIndex >= 0) {
+            FragmentManager.BackStackEntry top = mFragmentManager.getBackStackEntryAt(topIndex);
+            String topFragmentName = top.getName();
+
+            if (topFragmentName != null && topFragmentName.equals(FRAGMENT_TAG_DEMO)) {
+                Log.i(TAG, "A DemoFragment is at the top of the back stack: " + mFragmentManager.popBackStackImmediate());
+            } else {
+                Log.i(TAG, "DemoFragment is not at the top of the back stack: " + topFragmentName);
+            }
+        }
+
+        if (mDemoFragmentId != NO_DEMO_FRAGMENT_ID && !mDualPane) {
+            Log.i(TAG, "Attaching DemoFragment to container.");
+
+            mDemoView = MainFragment.TestFragment.newInstance("" + mDemoFragmentId);
+            //if (!isFragmentOnScreen(mDemoView)) {
+            mFragmentManager.beginTransaction()
+                    .replace(R.id.content_fragment_container, mDemoView.asFragment(), FRAGMENT_TAG_DEMO)
+                    .addToBackStack(FRAGMENT_TAG_DEMO)
+                    .commit();
+            //}
+        }
+        else {
             Log.i(TAG, "Attaching MainFragment to container.");
             mFragmentManager.beginTransaction()
                     .replace(R.id.content_fragment_container, mMainView.asFragment(), FRAGMENT_TAG_MAIN)
                     .commit();
         }
+
+        Log.d(TAG, "onCreate - END Back stack size: " + mFragmentManager.getBackStackEntryCount());
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(KEY_FRAGMENT_DEMO_ID, mDemoFragmentId);
     }
 
     /**
@@ -60,27 +119,78 @@ public class MainActivity extends BaseActivity implements IRootView {
     public void onBackPressed() {
         boolean backHandled = false;
 
+        Log.d(TAG, "onBackPressed - BEGIN Back stack size: " + mFragmentManager.getBackStackEntryCount());
+
         if (isFragmentOnScreen(mMainView)) {
+            Log.d(TAG, "Letting MainFragment handle back.");
+
             backHandled |= mMainView.onBackPressed();
         }
 
         if (isFragmentOnScreen(mDemoView)) {
-            backHandled |= mDemoView.onBackPressed();
+            Log.d(TAG, "Letting DemoFragment handle back.");
+
+            boolean demoViewHandledBack = mDemoView.onBackPressed();
+            backHandled |= demoViewHandledBack;
+
+            if (!demoViewHandledBack) {
+                setDemoFragmentId(NO_DEMO_FRAGMENT_ID);
+
+                // Post to the UI thread because this may cause MainView to execute a fragment
+                // transaction after onSaveInstanceState was called:
+                // 1) Turn "Don't keep activities" off
+                // 2) Open app in portrait and select action topic
+                // 3) Rotate to landscape, and then rotate back to portrait
+                // 4) Press recent apps button, re-open app
+                // 5) Press back button
+                new Handler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mMainView.setDemoFragmentId(NO_DEMO_FRAGMENT_ID);
+                    }
+                });
+            }
         }
 
+        Log.d(TAG, "onBackPressed - AFTER Back stack size: " + mFragmentManager.getBackStackEntryCount());
+
         if (!backHandled) {
+            Log.d(TAG, "Neither MainFragment nor DemoFragment handled back.");
             super.onBackPressed();
         }
     }
 
+    @Override
+    public void setDemoFragmentId(int demoFragmentId) {
+        mDemoFragmentId = demoFragmentId;
+
+        if (mDemoFragmentId != NO_DEMO_FRAGMENT_ID && !mDualPane) {
+            if (Debug.isInDebugMode(DEBUG)) {
+                Log.d(TAG, "Showing new DemoFragment");
+            }
+
+            mDemoView = MainFragment.TestFragment.newInstance(mDemoFragmentId+"");
+            mFragmentManager.beginTransaction()
+                    .replace(R.id.content_fragment_container, mDemoView.asFragment(), FRAGMENT_TAG_DEMO)
+                    .addToBackStack(FRAGMENT_TAG_DEMO)
+                    .commit();
+        }
+    }
+
     private boolean isFragmentOnScreen(IBaseFragment fragment) {
-        return fragment != null && fragment.asFragment().isVisible();
+        boolean isOnScreen = fragment != null && fragment.asFragment().isVisible();
+
+        if (Debug.isInDebugMode(DEBUG)) {
+            Log.d(TAG, "Is Fragment " + fragment + " on screen? " + isOnScreen);
+        }
+
+        return isOnScreen;
     }
 
     //region ILifecycleLoggable
     @Override
     public boolean onLogLifecycle() {
-        return false;
+        return DEBUG;
     }
     //endregion
 }

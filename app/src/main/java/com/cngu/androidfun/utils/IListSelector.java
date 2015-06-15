@@ -1,4 +1,4 @@
-package com.cngu.androidfun.main;
+package com.cngu.androidfun.utils;
 
 /**
  * An interface to provide a list selection mode strategy.

@@ -17,26 +17,55 @@ public class ActionTopic extends Topic {
      */
     public ActionTopic(String title, String description, int demoFragmentId) {
         super(title, description);
-        setTopicFragmentToLaunch(demoFragmentId);
+        setDemoFragmentId(demoFragmentId);
     }
 
-    public int getTopicFragmentToLaunch() {
+    public int getDemoFragmentId() {
         return mDemoFragmentId;
     }
 
-    public void setTopicFragmentToLaunch(int demoFragmentId) {
+    public void setDemoFragmentId(int demoFragmentId) {
         mDemoFragmentId = demoFragmentId;
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(ActionTopic.class.getSimpleName()).append("{")
+        StringBuilder sb = new StringBuilder(ActionTopic.class.getSimpleName()).append(System.identityHashCode(this)).append("{")
                 .append("title=").append("\"").append(getTitle()).append("\"")
                 .append(" description=").append("\"").append(getDescription()).append("\"")
                 .append(" demoFragId=").append(mDemoFragmentId)
                 .append("}");
 
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        if (!super.equals(o)) {
+            return false;
+        }
+
+        ActionTopic that = (ActionTopic) o;
+
+        if (mDemoFragmentId != that.mDemoFragmentId) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + mDemoFragmentId;
+        return result;
     }
 
     //region Parcelable

@@ -97,6 +97,16 @@ public class TopicManager implements ITopicManager {
         savedInstanceState.putParcelableArrayList(KEY_HISTORY_STACK, mHistory);
     }
 
+    @Override
+    public boolean isTopicInHistory(Topic topic) {
+        for (Topic t : mHistory) {
+            if (topic.equals(t)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private Topic generateTopicHierarchy(TopicView root) {
         if (root == null) {
             return null;

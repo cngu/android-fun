@@ -57,6 +57,34 @@ public abstract class Topic implements Parcelable {
         return sb.toString();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Topic)) {
+            return false;
+        }
+
+        Topic topic = (Topic) o;
+
+        if (mTitle != null ? !mTitle.equals(topic.mTitle) : topic.mTitle != null) {
+            return false;
+        }
+        if (mDescription != null ? !mDescription.equals(topic.mDescription) : topic.mDescription != null) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 17;
+        result = 31 * result + (mTitle != null ? mTitle.hashCode() : 0);
+        result = 31 * result + (mDescription != null ? mDescription.hashCode() : 0);
+        return result;
+    }
+
     //region Parcelable
     @Override
     public int describeContents() {

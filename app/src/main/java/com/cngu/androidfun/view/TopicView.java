@@ -133,6 +133,5 @@ public class TopicView extends FrameLayout {
     public interface OnClickListener {
         void onActionTopicClicked(ActionTopic topic, TopicListAdapter.ViewHolder viewHolder);
         void onMenuTopicClicked(MenuTopic topic, TopicListAdapter.ViewHolder viewHolder);
-        void onSelectedTopicClicked();
     }
 }
