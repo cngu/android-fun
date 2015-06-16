@@ -1,7 +1,5 @@
 package com.cngu.androidfun.main;
 
-import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
@@ -11,23 +9,18 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.cngu.androidfun.R;
 import com.cngu.androidfun.base.BaseFragment;
 import com.cngu.androidfun.debug.Debug;
-import com.cngu.androidfun.demo.DemoFragment;
-import com.cngu.androidfun.demo.DemoFragmentFactory;
-import com.cngu.androidfun.demo.IDemoFragment;
+import com.cngu.androidfun.demo.common.DemoFragmentFactory;
+import com.cngu.androidfun.demo.common.IDemoFragment;
 
 
 /**
@@ -99,7 +92,7 @@ public class MainFragment extends BaseFragment implements IMainFragment {
         // Initialize helper *Managers
         mFragmentManager = getChildFragmentManager();
         mTopicManager = new TopicManager(getActivity());
-        mDemoFragmentFactory = new DemoFragmentFactory();
+        mDemoFragmentFactory = new DemoFragmentFactory(getActivity());
 
         mPresenter = new MainPresenter((MainActivity) getActivity(), this);
         mPresenter.setTopicManager(mTopicManager);
@@ -310,69 +303,6 @@ public class MainFragment extends BaseFragment implements IMainFragment {
             mFragmentManager.beginTransaction()
                     .replace(R.id.right_pane, demoFragment.asFragment(), FRAGMENT_TAG_DEMO)
                     .commit();
-        }
-    }
-
-    // TODO: This class is for testing purposes only! Replace it with real demo fragments later.
-    public static class TestFragment extends DemoFragment {
-
-        private String mName;
-
-        public static TestFragment newInstance(String name) {
-            TestFragment tf = new TestFragment();
-            tf.mName = name;
-
-            Bundle args = new Bundle();
-            args.putString("NAME", name);
-            tf.setArguments(args);
-
-            return tf;
-        }
-
-        public TestFragment() {
-        }
-
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            super.onCreateView(inflater, container, savedInstanceState);
-
-            Bundle args = getArguments();
-            if (args == null) {
-                mName = "NONE";
-            } else {
-                mName = args.getString("NAME");
-            }
-
-            Context context = getActivity();
-
-            TextView tv = new TextView(context);
-            tv.setTextSize(30);
-            tv.setText("DEMO FRAGMENT - " + mName);
-
-            RelativeLayout rl = new RelativeLayout(context);
-            rl.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-            rl.addView(tv);
-
-            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) tv.getLayoutParams();
-            lp.addRule(RelativeLayout.CENTER_IN_PARENT);
-
-            return rl;
-        }
-
-        @Override
-        public boolean onLogLifecycle() {
-            return false;
-        }
-
-        @Override
-        public boolean onBackPressed() {
-            return false;
         }
     }
 }

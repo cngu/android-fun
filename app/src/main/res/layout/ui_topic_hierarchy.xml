@@ -30,6 +30,11 @@
         style="@style/Empty">
 
         <com.cngu.androidfun.view.TopicView
+            custom:topic_title="Animation Transition"
+            custom:inflate_topic_view="false"
+            custom:demo_frag_id="@integer/demo_activitytransition"
+            style="@style/Empty"/>
+        <com.cngu.androidfun.view.TopicView
             custom:topic_title="AnimationSet"
             custom:inflate_topic_view="false"
             custom:demo_frag_id="@integer/demo_test_1"

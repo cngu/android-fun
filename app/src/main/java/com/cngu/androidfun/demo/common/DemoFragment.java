@@ -1,4 +1,4 @@
-package com.cngu.androidfun.demo;
+package com.cngu.androidfun.demo.common;
 
 import com.cngu.androidfun.base.BaseFragment;
 
@@ -7,4 +7,9 @@ import com.cngu.androidfun.base.BaseFragment;
  * extend from this DemoFragment class instead of worrying about BaseFragment and IDemoFragment.
  */
 public abstract class DemoFragment extends BaseFragment implements IDemoFragment {
+
+    @Override
+    public boolean onLogLifecycle() {
+        return false;
+    }
 }

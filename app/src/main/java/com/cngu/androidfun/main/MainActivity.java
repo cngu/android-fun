@@ -9,8 +9,8 @@ import com.cngu.androidfun.R;
 import com.cngu.androidfun.base.BaseActivity;
 import com.cngu.androidfun.base.IBaseFragment;
 import com.cngu.androidfun.debug.Debug;
-import com.cngu.androidfun.demo.DemoFragmentFactory;
-import com.cngu.androidfun.demo.IDemoFragment;
+import com.cngu.androidfun.demo.common.DemoFragmentFactory;
+import com.cngu.androidfun.demo.common.IDemoFragment;
 
 
 public class MainActivity extends BaseActivity implements IRootView {
@@ -41,7 +41,7 @@ public class MainActivity extends BaseActivity implements IRootView {
 
         // Create helper *Managers
         mFragmentManager = getSupportFragmentManager();
-        mDemoFragmentFactory = new DemoFragmentFactory();
+        mDemoFragmentFactory = new DemoFragmentFactory(this);
 
         mDualPane = getResources().getBoolean(R.bool.dual_pane);
 
