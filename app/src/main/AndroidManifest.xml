@@ -20,11 +20,13 @@
         <activity
             android:name=".demo.activitytransition.SourceTransitionActivity"
             android:label="@string/title_activity_source_transition"
-            android:parentActivityName=".main.MainActivity" >
+            android:theme="@style/TransitionTheme"
+            android:parentActivityName=".main.MainActivity">
         </activity>
         <activity
             android:name=".demo.activitytransition.TargetTransitionActivity"
             android:label="@string/title_activity_target_transition"
+            android:theme="@style/TransitionTheme"
             android:parentActivityName=".demo.activitytransition.SourceTransitionActivity">
         </activity>
     </application>

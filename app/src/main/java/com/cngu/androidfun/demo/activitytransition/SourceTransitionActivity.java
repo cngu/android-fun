@@ -1,13 +1,11 @@
 package com.cngu.androidfun.demo.activitytransition;
 
+import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.AppCompatActivity;
-import android.transition.Fade;
-import android.transition.Transition;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -15,7 +13,7 @@ import android.widget.Button;
 
 import com.cngu.androidfun.R;
 
-public class SourceTransitionActivity extends AppCompatActivity {
+public class SourceTransitionActivity extends Activity {
 
     public static final String KEY_COLOR = "key_color";
 
@@ -27,14 +25,7 @@ public class SourceTransitionActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_source_transition);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        // Prevent the Status Bar and Navigation Bar from being transitioned
-        Transition fade = new Fade();
-        fade.excludeTarget(android.R.id.statusBarBackground, true);
-        fade.excludeTarget(android.R.id.navigationBarBackground, true);
-        getWindow().setExitTransition(fade);
-        getWindow().setEnterTransition(fade);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         View.OnClickListener clickListener = new View.OnClickListener() {
             @Override

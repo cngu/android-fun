@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="DemoTheme" parent="android:Theme.Material.Light">
+    </style>
+
+    <style name="TransitionTheme" parent="DemoTheme">
+        <!-- enable window content transitions -->
+        <item name="android:windowContentTransitions">true</item>
+
+        <!-- specify enter and exit transitions -->
+        <item name="android:windowEnterTransition">@transition/disable_system_bars</item>
+        <item name="android:windowExitTransition">@transition/disable_system_bars</item>
+
+        <!-- specify shared element transitions -->
+        <item name="android:windowSharedElementEnterTransition">@transition/change_box_transform</item>
+        <item name="android:windowSharedElementExitTransition">@transition/change_box_transform</item>
+    </style>
+
+</resources>

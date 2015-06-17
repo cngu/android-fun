@@ -10,11 +10,12 @@
     </style>
 
     <style name="AppTheme" parent="BaseAppTheme">
-
     </style>
 
     <style name="DemoTheme" parent="Theme.AppCompat.Light">
-
+    </style>
+    
+    <style name="TransitionTheme" parent="DemoTheme">
     </style>
 
     <!-- Toolbar Themes -->
