@@ -24,14 +24,14 @@
                 android:layout_height="100dp"
                 android:layout_margin="10dp"
                 android:background="@android:color/holo_red_light"
-                android:transitionName="my_transition" />
+                android:transitionName="@string/transition_expand_box" />
             <Button
                 android:id="@+id/green_button"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_margin="10dp"
                 android:background="@android:color/holo_green_light"
-                android:transitionName="my_transition" />
+                android:transitionName="@string/transition_expand_box" />
         </LinearLayout>
 
         <LinearLayout
@@ -44,14 +44,14 @@
                 android:layout_height="100dp"
                 android:layout_margin="10dp"
                 android:background="@android:color/holo_blue_light"
-                android:transitionName="my_transition" />
+                android:transitionName="@string/transition_expand_box" />
             <Button
                 android:id="@+id/orange_button"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_margin="10dp"
                 android:background="@android:color/holo_orange_light"
-                android:transitionName="my_transition" />
+                android:transitionName="@string/transition_expand_box" />
         </LinearLayout>
 
     </LinearLayout>

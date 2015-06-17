@@ -46,7 +46,7 @@ public class SourceTransitionActivity extends AppCompatActivity {
                 // of both activities are defined with android:transitionName="my_transition"
                 ActivityOptions options = ActivityOptions
                         .makeSceneTransitionAnimation(SourceTransitionActivity.this, view,
-                                                      "my_transition");
+                                                      getString(R.string.transition_expand_box));
 
                 intent.putExtra(KEY_COLOR, ((ColorDrawable) view.getBackground()).getColor());
 

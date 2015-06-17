@@ -33,7 +33,7 @@ public class ActivityTransitionDemo extends DemoFragment {
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             tv.setLayoutParams(new ViewGroup.LayoutParams(matchParent, matchParent));
-            tv.setText("ActivityTransitions require ActivityOptions.makeSceneTransitionAnimation," +
+            tv.setText("ActivityTransitions utilizes ActivityOptions.makeSceneTransitionAnimation," +
                     " which requires API level 21");
             tv.setTextColor(Color.RED);
             tv.setGravity(Gravity.CENTER);
