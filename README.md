@@ -3,7 +3,7 @@
 A sample project to demonstrate various Android features and APIs.
 
 ##Examples
-* 
+* Activity Enter, Exit, and Shared Element Transitions
 
 ##Device Support
 Only phones and tablets running Android 4.0 (API level 14+) are supported. 
